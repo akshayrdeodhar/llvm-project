@@ -179,6 +179,96 @@ define i16 @relaxed_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
   ret i16 %new
 }
 
+
+; CHECK-LABEL: seq_cst_sys_i16
+define i16 @seq_cst_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
+; SM30-LABEL: seq_cst_sys_i16(
+; SM30:       {
+; SM30-NEXT:    .reg .pred %p<3>;
+; SM30-NEXT:    .reg .b16 %rs<2>;
+; SM30-NEXT:    .reg .b32 %r<20>;
+; SM30-NEXT:    .reg .b64 %rd<3>;
+; SM30-EMPTY:
+; SM30-NEXT:  // %bb.0:
+; SM30-NEXT:    ld.param.u16 %rs1, [seq_cst_sys_i16_param_2];
+; SM30-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i16_param_0];
+; SM30-NEXT:    membar.sys;
+; SM30-NEXT:    ld.param.u16 %r9, [seq_cst_sys_i16_param_1];
+; SM30-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM30-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM30-NEXT:    and.b32 %r11, %r10, 3;
+; SM30-NEXT:    shl.b32 %r1, %r11, 3;
+; SM30-NEXT:    mov.b32 %r12, 65535;
+; SM30-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM30-NEXT:    not.b32 %r2, %r13;
+; SM30-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM30-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM30-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM30-NEXT:    ld.u32 %r15, [%rd1];
+; SM30-NEXT:    and.b32 %r19, %r15, %r2;
+; SM30-NEXT:  $L__BB2_1: // %partword.cmpxchg.loop
+; SM30-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM30-NEXT:    or.b32 %r16, %r19, %r3;
+; SM30-NEXT:    or.b32 %r17, %r19, %r4;
+; SM30-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM30-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM30-NEXT:    @%p1 bra $L__BB2_3;
+; SM30-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM30-NEXT:    // in Loop: Header=BB2_1 Depth=1
+; SM30-NEXT:    and.b32 %r8, %r7, %r2;
+; SM30-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM30-NEXT:    mov.u32 %r19, %r8;
+; SM30-NEXT:    @%p2 bra $L__BB2_1;
+; SM30-NEXT:  $L__BB2_3: // %partword.cmpxchg.end
+; SM30-NEXT:    membar.sys;
+; SM30-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM30-NEXT:    ret;
+;
+; SM70-LABEL: seq_cst_sys_i16(
+; SM70:       {
+; SM70-NEXT:    .reg .pred %p<3>;
+; SM70-NEXT:    .reg .b16 %rs<2>;
+; SM70-NEXT:    .reg .b32 %r<20>;
+; SM70-NEXT:    .reg .b64 %rd<3>;
+; SM70-EMPTY:
+; SM70-NEXT:  // %bb.0:
+; SM70-NEXT:    ld.param.u16 %rs1, [seq_cst_sys_i16_param_2];
+; SM70-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i16_param_0];
+; SM70-NEXT:    fence.sc.sys;
+; SM70-NEXT:    ld.param.u16 %r9, [seq_cst_sys_i16_param_1];
+; SM70-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM70-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM70-NEXT:    and.b32 %r11, %r10, 3;
+; SM70-NEXT:    shl.b32 %r1, %r11, 3;
+; SM70-NEXT:    mov.b32 %r12, 65535;
+; SM70-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM70-NEXT:    not.b32 %r2, %r13;
+; SM70-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM70-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM70-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM70-NEXT:    ld.u32 %r15, [%rd1];
+; SM70-NEXT:    and.b32 %r19, %r15, %r2;
+; SM70-NEXT:  $L__BB2_1: // %partword.cmpxchg.loop
+; SM70-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM70-NEXT:    or.b32 %r16, %r19, %r3;
+; SM70-NEXT:    or.b32 %r17, %r19, %r4;
+; SM70-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM70-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM70-NEXT:    @%p1 bra $L__BB2_3;
+; SM70-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM70-NEXT:    // in Loop: Header=BB2_1 Depth=1
+; SM70-NEXT:    and.b32 %r8, %r7, %r2;
+; SM70-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM70-NEXT:    mov.u32 %r19, %r8;
+; SM70-NEXT:    @%p2 bra $L__BB2_1;
+; SM70-NEXT:  $L__BB2_3: // %partword.cmpxchg.end
+; SM70-NEXT:    fence.acq_rel.sys;
+; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM70-NEXT:    ret;
+  %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new seq_cst seq_cst
+  ret i16 %new
+}
+
 ; CHECK-LABEL: relaxed_sys_i32
 define i32 @relaxed_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM30-LABEL: relaxed_sys_i32(

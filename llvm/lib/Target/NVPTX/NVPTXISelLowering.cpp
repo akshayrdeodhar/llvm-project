@@ -42,6 +42,7 @@
 #include "llvm/IR/FPEnv.h"
 #include "llvm/IR/Function.h"
 #include "llvm/IR/GlobalValue.h"
+#include "llvm/IR/IRBuilder.h"
 #include "llvm/IR/Instruction.h"
 #include "llvm/IR/Instructions.h"
 #include "llvm/IR/IntrinsicsNVPTX.h"
@@ -5587,10 +5588,56 @@ NVPTXTargetLowering::shouldExpandAtomicRMWInIR(AtomicRMWInst *AI) const {
   return AtomicExpansionKind::CmpXChg;
 }
 
+<<<<<<< HEAD
 bool NVPTXTargetLowering::shouldInsertFencesForAtomic(const Instruction *I) const {
   auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
   return CI && (cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() < STI.getMinCmpXchgSizeInBits() ||
                 CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
+=======
+bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
+    const Instruction *I) const {
+  auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
+  // When CAS bitwidth is not supported on the hardware, the CAS is emulated
+  // using a retry loop that uses a higher-bitwidth *monotonic* CAS. We enforce
+  // the memory order using explicit fences around the retry loop.
+  // The memory order of natively supported CAS operations can be enforced
+  // by lowering to an atom.cas with the right memory synchronizing effect.
+  // However, atom.cas only supports relaxed, acquire, release and acq_rel,
+  // not seq_cst.
+  return CI &&
+         (cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() <
+              STI.getMinCmpXchgSizeInBits() ||
+          CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
+}
+
+Instruction *NVPTXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
+                                                   Instruction *Inst,
+                                                   AtomicOrdering Ord) const {
+  if (isa<AtomicCmpXchgInst>(Inst)) {
+    if (isReleaseOrStronger(Ord)) {
+      if (Ord != AtomicOrdering::SequentiallyConsistent)
+        return Builder.CreateFence(AtomicOrdering::Release);
+      else
+        return Builder.CreateFence(AtomicOrdering::SequentiallyConsistent);
+    } else {
+      return nullptr;
+    }
+  } else {
+    return TargetLoweringBase::emitLeadingFence(Builder, Inst, Ord);
+  }
+}
+
+Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
+                                                   Instruction *Inst,
+                                                   AtomicOrdering Ord) const {
+  if (isa<AtomicCmpXchgInst>(Inst))
+    if (isAcquireOrStronger(Ord))
+      return Builder.CreateFence(AtomicOrdering::Acquire);
+    else
+      return nullptr;
+  else
+    return TargetLoweringBase::emitTrailingFence(Builder, Inst, Ord);
+>>>>>>> 5dacb8aeec32 (add fences around cas emulation loops)
 }
 
 // Pin NVPTXTargetObjectFile's vtables to this file.
