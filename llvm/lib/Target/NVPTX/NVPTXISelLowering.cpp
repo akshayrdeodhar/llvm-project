@@ -49,6 +49,7 @@
 #include "llvm/IR/Type.h"
 #include "llvm/IR/Value.h"
 #include "llvm/Support/Alignment.h"
+#include "llvm/Support/AtomicOrdering.h"
 #include "llvm/Support/Casting.h"
 #include "llvm/Support/CodeGen.h"
 #include "llvm/Support/CommandLine.h"
@@ -5584,6 +5585,12 @@ NVPTXTargetLowering::shouldExpandAtomicRMWInIR(AtomicRMWInst *AI) const {
   }
 
   return AtomicExpansionKind::CmpXChg;
+}
+
+bool NVPTXTargetLowering::shouldInsertFencesForAtomic(const Instruction *I) const {
+  auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
+  return CI && (cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() < STI.getMinCmpXchgSizeInBits() ||
+                CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
 }
 
 // Pin NVPTXTargetObjectFile's vtables to this file.

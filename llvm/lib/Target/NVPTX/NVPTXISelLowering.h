@@ -260,6 +260,8 @@ public:
     return true;
   }
 
+  bool shouldInsertFencesForAtomic(const Instruction *) const override;
+
 private:
   const NVPTXSubtarget &STI; // cache the subtarget here
   SDValue getParamSymbol(SelectionDAG &DAG, int idx, EVT) const;
