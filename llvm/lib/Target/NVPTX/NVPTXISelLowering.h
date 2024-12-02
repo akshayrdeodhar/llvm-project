@@ -262,15 +262,12 @@ public:
 
   bool shouldInsertFencesForAtomic(const Instruction *) const override;
 
-<<<<<<< HEAD
-=======
   Instruction *emitLeadingFence(IRBuilderBase &Builder,
                                                   Instruction *Inst,
-                                                  AtomicOrdering Ord) const;
+                                                  AtomicOrdering Ord) const override;
   Instruction *emitTrailingFence(IRBuilderBase &Builder,
                                                   Instruction *Inst,
-                                                  AtomicOrdering Ord) const;
->>>>>>> 5dacb8aeec32 (add fences around cas emulation loops)
+                                                  AtomicOrdering Ord) const override;
 private:
   const NVPTXSubtarget &STI; // cache the subtarget here
   SDValue getParamSymbol(SelectionDAG &DAG, int idx, EVT) const;

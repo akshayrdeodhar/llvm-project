@@ -5588,12 +5588,6 @@ NVPTXTargetLowering::shouldExpandAtomicRMWInIR(AtomicRMWInst *AI) const {
   return AtomicExpansionKind::CmpXChg;
 }
 
-<<<<<<< HEAD
-bool NVPTXTargetLowering::shouldInsertFencesForAtomic(const Instruction *I) const {
-  auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
-  return CI && (cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() < STI.getMinCmpXchgSizeInBits() ||
-                CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
-=======
 bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
     const Instruction *I) const {
   auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
@@ -5637,7 +5631,6 @@ Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
       return nullptr;
   else
     return TargetLoweringBase::emitTrailingFence(Builder, Inst, Ord);
->>>>>>> 5dacb8aeec32 (add fences around cas emulation loops)
 }
 
 // Pin NVPTXTargetObjectFile's vtables to this file.
