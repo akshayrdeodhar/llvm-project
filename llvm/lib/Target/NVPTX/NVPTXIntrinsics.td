@@ -2379,6 +2379,23 @@ defm INT_PTX_ATOM_XOR_GEN_64_USE_G : F_ATOMIC_2<i64, Int64Regs, ".global", ".b64
   ".xor", atomic_load_xor_i64_gen, i64imm, imm, [hasSM<32>]>;
 
 // atom_cas
+multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
+    def _gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+    (SizeFrag node:$a, node:$b, node:$c)>;
+    def _g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
+    (SizeFrag node:$a, node:$b, node:$c)>;
+    def _s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
+    (SizeFrag node:$a, node:$b, node:$c)>;
+}
+
+multiclass atomic_cmp_swap_as_size {
+  
+  defm _i16: atomic_cmp_swap_as<atomic_cmp_swap_i16>;
+  defm _i32: atomic_cmp_swap_as<atomic_cmp_swap_i32>;
+  defm _i64: atomic_cmp_swap_as<atomic_cmp_swap_i64>;
+}
+
+defm atomic_cmp_swap_match : atomic_cmp_swap_as_size;
 
 def atomic_cmp_swap_i64_acquire_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
   (atomic_cmp_swap_i64_acquire node:$a, node:$b, node:$c)>;
