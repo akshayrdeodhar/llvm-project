@@ -2378,7 +2378,8 @@ defm INT_PTX_ATOM_XOR_GEN_64 : F_ATOMIC_2<i64, Int64Regs, "", ".b64", ".xor",
 defm INT_PTX_ATOM_XOR_GEN_64_USE_G : F_ATOMIC_2<i64, Int64Regs, ".global", ".b64",
   ".xor", atomic_load_xor_i64_gen, i64imm, imm, [hasSM<32>]>;
 
-// atom_cas
+// atom.cas
+// generate pattern fragments for matching address spaces
 multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
     def _gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
     (SizeFrag node:$a, node:$b, node:$c)>;
@@ -2388,6 +2389,7 @@ multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
     (SizeFrag node:$a, node:$b, node:$c)>;
 }
 
+// generate pattern fragments for size x memory order
 foreach size = ["i16", "i32", "i64"] in {
   foreach order = ["", "_monotonic", "_acquire", "_release", "_acq_rel", "_seq_cst"] in {
     defm atomic_cmp_swap#_#size#order: atomic_cmp_swap_as<!cast<PatFrag>(atomic_cmp_swap#_#size#order)>;
@@ -2426,6 +2428,7 @@ foreach size = ["i16", "i32", "i64"] in {
 //def atomic_cmp_swap_i64_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
 //  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
 
+// defines atom.cas for each address space
 multiclass INT_PTX_ATOM_CAS_AS<string atomic_cmp_swap_without_as, string type, string order> {
   defm _GEN: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), order, "", ".b"#type, ".cas",
                        !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm")>;
@@ -2440,6 +2443,7 @@ multiclass INT_PTX_ATOM_CAS_AS<string atomic_cmp_swap_without_as, string type, s
                        !cast<PatFrag>(atomic_cmp_swap_without_as#_s), !cast<Operand>("i"#type#"imm")>;
 }
 
+// Define atom.cas for all combinations of size x memory order supported in PTX *and* on the hardware.
 foreach size = ["32", "64"] in {
   // We enumerate the instructions with specific memory orders ["acquire", "release", "acq_rel"]
   // *before* the instructions with the unspecified memory order [""].
@@ -2457,6 +2461,8 @@ foreach size = ["32", "64"] in {
 //  atomic_cmp_swap_i64_acquire_gen, i64imm>;
 //defm INT_PTX_ATOM_CAS_GEN_64_acq_rel : F_ATOMIC_3<i64, Int64Regs, ".acq_rel", "", ".b64", ".cas",
 //  atomic_cmp_swap_i64_acq_rel_gen, i64imm>;
+// Keep already-defined 16-bit CAS instructions for backward compatibility.
+// Note that 16-bit CAS support in PTX is *emulated*. (TODO: public?)
 defm INT_PTX_ATOM_CAS_G_16 : F_ATOMIC_3<i16, Int16Regs, "", ".global", ".b16", ".cas",
   atomic_cmp_swap_i16_g, i16imm, [hasSM<70>, hasPTX<63>]>;
 defm INT_PTX_ATOM_CAS_S_16 : F_ATOMIC_3<i16, Int16Regs, "", ".shared", ".b16", ".cas",
