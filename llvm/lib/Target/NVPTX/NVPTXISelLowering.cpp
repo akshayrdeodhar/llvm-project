@@ -5622,8 +5622,8 @@ Instruction *NVPTXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
 }
 
 Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
-                                                   Instruction *Inst,
-                                                   AtomicOrdering Ord) const {
+                                                    Instruction *Inst,
+                                                    AtomicOrdering Ord) const {
   if (isa<AtomicCmpXchgInst>(Inst))
     if (isAcquireOrStronger(Ord))
       return Builder.CreateFence(AtomicOrdering::Acquire);
