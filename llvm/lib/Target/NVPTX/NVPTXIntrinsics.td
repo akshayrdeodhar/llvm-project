@@ -2388,37 +2388,43 @@ multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
     (SizeFrag node:$a, node:$b, node:$c)>;
 }
 
-multiclass atomic_cmp_swap_as_size {
-  
-  defm _i16: atomic_cmp_swap_as<atomic_cmp_swap_i16>;
-  defm _i32: atomic_cmp_swap_as<atomic_cmp_swap_i32>;
-  defm _i64: atomic_cmp_swap_as<atomic_cmp_swap_i64>;
+foreach size = ["i16", "i32", "i64"] in {
+  foreach order = ["", "_monotonic", "_acquire", "_release", "_acq_rel", "_seq_cst"] in {
+    defm atomic_cmp_swap#_#size#order: atomic_cmp_swap_as<!cast<PatFrag>(atomic_cmp_swap#_#size#order)>;
+  }
 }
 
-defm atomic_cmp_swap_match : atomic_cmp_swap_as_size;
+//multiclass atomic_cmp_swap_as_size {
+//  
+//  defm _i16: atomic_cmp_swap_as<atomic_cmp_swap_i16>;
+//  defm _i32: atomic_cmp_swap_as<atomic_cmp_swap_i32>;
+//  defm _i64: atomic_cmp_swap_as<atomic_cmp_swap_i64>;
+//}
 
-def atomic_cmp_swap_i64_acquire_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i64_acquire node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i64_acq_rel_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i64_acq_rel node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i16_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i16_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i16_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i32_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i32_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i32_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i64_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i64_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
-def atomic_cmp_swap_i64_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
+//defm atomic_cmp_swap_match : atomic_cmp_swap_as_size;
+
+//def atomic_cmp_swap_i64_acquire_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i64_acquire node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i64_acq_rel_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i64_acq_rel node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i16_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i16_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i16_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i16 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i32_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i32_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i32_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i32 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i64_g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i64_s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
+//def atomic_cmp_swap_i64_gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
+//  (atomic_cmp_swap_i64 node:$a, node:$b, node:$c)>;
 
 defm INT_PTX_ATOM_CAS_GEN_64_acquire : F_ATOMIC_3<i64, Int64Regs, ".acquire", "", ".b64", ".cas",
   atomic_cmp_swap_i64_acquire_gen, i64imm>;
