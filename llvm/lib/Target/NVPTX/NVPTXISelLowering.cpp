@@ -5592,12 +5592,13 @@ bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
     const Instruction *I) const {
   auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
   // When CAS bitwidth is not supported on the hardware, the CAS is emulated
-  // using a retry loop that uses a higher-bitwidth *monotonic* CAS. We enforce
+  // using a retry loop that uses a higher-bitwidth monotonic CAS. We enforce
   // the memory order using explicit fences around the retry loop.
   // The memory order of natively supported CAS operations can be enforced
   // by lowering to an atom.cas with the right memory synchronizing effect.
-  // However, atom.cas only supports relaxed, acquire, release and acq_rel,
-  // not seq_cst.
+  // However, atom.cas only supports relaxed, acquire, release and acq_rel.
+  // So we also use explicit fences for enforcing memory order for
+  // seq_cast CAS with natively-supported bitwidths.
   return CI &&
          (cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() <
               STI.getMinCmpXchgSizeInBits() ||
@@ -5607,30 +5608,31 @@ bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
 Instruction *NVPTXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
                                                    Instruction *Inst,
                                                    AtomicOrdering Ord) const {
+  // Specialize for cmpxchg
   if (isa<AtomicCmpXchgInst>(Inst)) {
     if (isReleaseOrStronger(Ord)) {
       if (Ord != AtomicOrdering::SequentiallyConsistent)
         return Builder.CreateFence(AtomicOrdering::Release);
       else
         return Builder.CreateFence(AtomicOrdering::SequentiallyConsistent);
-    } else {
-      return nullptr;
     }
   } else {
     return TargetLoweringBase::emitLeadingFence(Builder, Inst, Ord);
   }
+  return nullptr;
 }
 
 Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
                                                     Instruction *Inst,
                                                     AtomicOrdering Ord) const {
-  if (isa<AtomicCmpXchgInst>(Inst))
+  // Specialize for cmpxchg
+  if (isa<AtomicCmpXchgInst>(Inst)) {
     if (isAcquireOrStronger(Ord))
       return Builder.CreateFence(AtomicOrdering::Acquire);
-    else
-      return nullptr;
-  else
+  } else {
     return TargetLoweringBase::emitTrailingFence(Builder, Inst, Ord);
+  }
+  return nullptr;
 }
 
 // Pin NVPTXTargetObjectFile's vtables to this file.
