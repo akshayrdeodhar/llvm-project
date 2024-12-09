@@ -91,6 +91,47 @@ define i8 @relaxed_sys_i8(ptr %addr, i8 %cmp, i8 %new) {
 ; SM70-NEXT:  $L__BB0_3: // %partword.cmpxchg.end
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r13;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: relaxed_sys_i8(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<21>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u8 %rs1, [relaxed_sys_i8_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [relaxed_sys_i8_param_0];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r9, %rd2;
+; SM90-NEXT:    and.b32 %r10, %r9, 3;
+; SM90-NEXT:    shl.b32 %r1, %r10, 3;
+; SM90-NEXT:    mov.b32 %r11, 255;
+; SM90-NEXT:    shl.b32 %r12, %r11, %r1;
+; SM90-NEXT:    not.b32 %r2, %r12;
+; SM90-NEXT:    cvt.u32.u16 %r13, %rs1;
+; SM90-NEXT:    and.b32 %r14, %r13, 255;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    ld.param.u8 %r15, [relaxed_sys_i8_param_1];
+; SM90-NEXT:    shl.b32 %r4, %r15, %r1;
+; SM90-NEXT:    ld.u32 %r16, [%rd1];
+; SM90-NEXT:    and.b32 %r20, %r16, %r2;
+; SM90-NEXT:  $L__BB0_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r17, %r20, %r3;
+; SM90-NEXT:    or.b32 %r18, %r20, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
+; SM90-NEXT:    @%p1 bra $L__BB0_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB0_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r20, %r8;
+; SM90-NEXT:    mov.u32 %r20, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB0_1;
+; SM90-NEXT:  $L__BB0_3: // %partword.cmpxchg.end
+; SM90-NEXT:    st.param.b32 [func_retval0], %r13;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i8 %cmp, i8 %new monotonic monotonic
   ret i8 %new
 }
@@ -179,6 +220,48 @@ define i8 @acquire_sys_i8(ptr %addr, i8 %cmp, i8 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r13;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acquire_sys_i8(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<21>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u8 %rs1, [acquire_sys_i8_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [acquire_sys_i8_param_0];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r9, %rd2;
+; SM90-NEXT:    and.b32 %r10, %r9, 3;
+; SM90-NEXT:    shl.b32 %r1, %r10, 3;
+; SM90-NEXT:    mov.b32 %r11, 255;
+; SM90-NEXT:    shl.b32 %r12, %r11, %r1;
+; SM90-NEXT:    not.b32 %r2, %r12;
+; SM90-NEXT:    cvt.u32.u16 %r13, %rs1;
+; SM90-NEXT:    and.b32 %r14, %r13, 255;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    ld.param.u8 %r15, [acquire_sys_i8_param_1];
+; SM90-NEXT:    shl.b32 %r4, %r15, %r1;
+; SM90-NEXT:    ld.u32 %r16, [%rd1];
+; SM90-NEXT:    and.b32 %r20, %r16, %r2;
+; SM90-NEXT:  $L__BB1_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r17, %r20, %r3;
+; SM90-NEXT:    or.b32 %r18, %r20, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
+; SM90-NEXT:    @%p1 bra $L__BB1_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB1_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r20, %r8;
+; SM90-NEXT:    mov.u32 %r20, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB1_1;
+; SM90-NEXT:  $L__BB1_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r13;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i8 %cmp, i8 %new acquire acquire
   ret i8 %new
 }
@@ -267,6 +350,48 @@ define i8 @release_sys_i8(ptr %addr, i8 %cmp, i8 %new) {
 ; SM70-NEXT:  $L__BB2_3: // %partword.cmpxchg.end
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r13;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: release_sys_i8(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<21>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u8 %rs1, [release_sys_i8_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [release_sys_i8_param_0];
+; SM90-NEXT:    fence.release.sys;
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r9, %rd2;
+; SM90-NEXT:    and.b32 %r10, %r9, 3;
+; SM90-NEXT:    shl.b32 %r1, %r10, 3;
+; SM90-NEXT:    mov.b32 %r11, 255;
+; SM90-NEXT:    shl.b32 %r12, %r11, %r1;
+; SM90-NEXT:    not.b32 %r2, %r12;
+; SM90-NEXT:    cvt.u32.u16 %r13, %rs1;
+; SM90-NEXT:    and.b32 %r14, %r13, 255;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    ld.param.u8 %r15, [release_sys_i8_param_1];
+; SM90-NEXT:    shl.b32 %r4, %r15, %r1;
+; SM90-NEXT:    ld.u32 %r16, [%rd1];
+; SM90-NEXT:    and.b32 %r20, %r16, %r2;
+; SM90-NEXT:  $L__BB2_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r17, %r20, %r3;
+; SM90-NEXT:    or.b32 %r18, %r20, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
+; SM90-NEXT:    @%p1 bra $L__BB2_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB2_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r20, %r8;
+; SM90-NEXT:    mov.u32 %r20, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB2_1;
+; SM90-NEXT:  $L__BB2_3: // %partword.cmpxchg.end
+; SM90-NEXT:    st.param.b32 [func_retval0], %r13;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i8 %cmp, i8 %new release monotonic
   ret i8 %new
 }
@@ -357,6 +482,49 @@ define i8 @acq_rel_sys_i8(ptr %addr, i8 %cmp, i8 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r13;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acq_rel_sys_i8(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<21>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u8 %rs1, [acq_rel_sys_i8_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [acq_rel_sys_i8_param_0];
+; SM90-NEXT:    fence.release.sys;
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r9, %rd2;
+; SM90-NEXT:    and.b32 %r10, %r9, 3;
+; SM90-NEXT:    shl.b32 %r1, %r10, 3;
+; SM90-NEXT:    mov.b32 %r11, 255;
+; SM90-NEXT:    shl.b32 %r12, %r11, %r1;
+; SM90-NEXT:    not.b32 %r2, %r12;
+; SM90-NEXT:    cvt.u32.u16 %r13, %rs1;
+; SM90-NEXT:    and.b32 %r14, %r13, 255;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    ld.param.u8 %r15, [acq_rel_sys_i8_param_1];
+; SM90-NEXT:    shl.b32 %r4, %r15, %r1;
+; SM90-NEXT:    ld.u32 %r16, [%rd1];
+; SM90-NEXT:    and.b32 %r20, %r16, %r2;
+; SM90-NEXT:  $L__BB3_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r17, %r20, %r3;
+; SM90-NEXT:    or.b32 %r18, %r20, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
+; SM90-NEXT:    @%p1 bra $L__BB3_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB3_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r20, %r8;
+; SM90-NEXT:    mov.u32 %r20, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB3_1;
+; SM90-NEXT:  $L__BB3_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r13;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i8 %cmp, i8 %new acq_rel acquire
   ret i8 %new
 }
@@ -447,6 +615,49 @@ define i8 @seq_cst_sys_i8(ptr %addr, i8 %cmp, i8 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r13;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: seq_cst_sys_i8(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<21>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u8 %rs1, [seq_cst_sys_i8_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i8_param_0];
+; SM90-NEXT:    fence.sc.sys;
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r9, %rd2;
+; SM90-NEXT:    and.b32 %r10, %r9, 3;
+; SM90-NEXT:    shl.b32 %r1, %r10, 3;
+; SM90-NEXT:    mov.b32 %r11, 255;
+; SM90-NEXT:    shl.b32 %r12, %r11, %r1;
+; SM90-NEXT:    not.b32 %r2, %r12;
+; SM90-NEXT:    cvt.u32.u16 %r13, %rs1;
+; SM90-NEXT:    and.b32 %r14, %r13, 255;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    ld.param.u8 %r15, [seq_cst_sys_i8_param_1];
+; SM90-NEXT:    shl.b32 %r4, %r15, %r1;
+; SM90-NEXT:    ld.u32 %r16, [%rd1];
+; SM90-NEXT:    and.b32 %r20, %r16, %r2;
+; SM90-NEXT:  $L__BB4_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r17, %r20, %r3;
+; SM90-NEXT:    or.b32 %r18, %r20, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
+; SM90-NEXT:    @%p1 bra $L__BB4_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB4_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r20, %r8;
+; SM90-NEXT:    mov.u32 %r20, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB4_1;
+; SM90-NEXT:  $L__BB4_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r13;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i8 %cmp, i8 %new seq_cst seq_cst
   ret i8 %new
 }
@@ -532,6 +743,46 @@ define i16 @relaxed_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
 ; SM70-NEXT:  $L__BB5_3: // %partword.cmpxchg.end
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: relaxed_sys_i16(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<20>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u16 %rs1, [relaxed_sys_i16_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [relaxed_sys_i16_param_0];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    ld.param.u16 %r9, [relaxed_sys_i16_param_1];
+; SM90-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM90-NEXT:    and.b32 %r11, %r10, 3;
+; SM90-NEXT:    shl.b32 %r1, %r11, 3;
+; SM90-NEXT:    mov.b32 %r12, 65535;
+; SM90-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM90-NEXT:    not.b32 %r2, %r13;
+; SM90-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM90-NEXT:    ld.u32 %r15, [%rd1];
+; SM90-NEXT:    and.b32 %r19, %r15, %r2;
+; SM90-NEXT:  $L__BB5_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r16, %r19, %r3;
+; SM90-NEXT:    or.b32 %r17, %r19, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM90-NEXT:    @%p1 bra $L__BB5_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB5_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM90-NEXT:    mov.u32 %r19, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB5_1;
+; SM90-NEXT:  $L__BB5_3: // %partword.cmpxchg.end
+; SM90-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new monotonic monotonic
   ret i16 %new
 }
@@ -618,6 +869,47 @@ define i16 @acquire_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acquire_sys_i16(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<20>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u16 %rs1, [acquire_sys_i16_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [acquire_sys_i16_param_0];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    ld.param.u16 %r9, [acquire_sys_i16_param_1];
+; SM90-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM90-NEXT:    and.b32 %r11, %r10, 3;
+; SM90-NEXT:    shl.b32 %r1, %r11, 3;
+; SM90-NEXT:    mov.b32 %r12, 65535;
+; SM90-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM90-NEXT:    not.b32 %r2, %r13;
+; SM90-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM90-NEXT:    ld.u32 %r15, [%rd1];
+; SM90-NEXT:    and.b32 %r19, %r15, %r2;
+; SM90-NEXT:  $L__BB6_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r16, %r19, %r3;
+; SM90-NEXT:    or.b32 %r17, %r19, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM90-NEXT:    @%p1 bra $L__BB6_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB6_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM90-NEXT:    mov.u32 %r19, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB6_1;
+; SM90-NEXT:  $L__BB6_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new acquire acquire
   ret i16 %new
 }
@@ -704,6 +996,47 @@ define i16 @release_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
 ; SM70-NEXT:  $L__BB7_3: // %partword.cmpxchg.end
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: release_sys_i16(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<20>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u16 %rs1, [release_sys_i16_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [release_sys_i16_param_0];
+; SM90-NEXT:    fence.release.sys;
+; SM90-NEXT:    ld.param.u16 %r9, [release_sys_i16_param_1];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM90-NEXT:    and.b32 %r11, %r10, 3;
+; SM90-NEXT:    shl.b32 %r1, %r11, 3;
+; SM90-NEXT:    mov.b32 %r12, 65535;
+; SM90-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM90-NEXT:    not.b32 %r2, %r13;
+; SM90-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM90-NEXT:    ld.u32 %r15, [%rd1];
+; SM90-NEXT:    and.b32 %r19, %r15, %r2;
+; SM90-NEXT:  $L__BB7_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r16, %r19, %r3;
+; SM90-NEXT:    or.b32 %r17, %r19, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM90-NEXT:    @%p1 bra $L__BB7_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB7_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM90-NEXT:    mov.u32 %r19, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB7_1;
+; SM90-NEXT:  $L__BB7_3: // %partword.cmpxchg.end
+; SM90-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new release monotonic
   ret i16 %new
 }
@@ -792,6 +1125,48 @@ define i16 @acq_rel_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acq_rel_sys_i16(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<20>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u16 %rs1, [acq_rel_sys_i16_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [acq_rel_sys_i16_param_0];
+; SM90-NEXT:    fence.release.sys;
+; SM90-NEXT:    ld.param.u16 %r9, [acq_rel_sys_i16_param_1];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM90-NEXT:    and.b32 %r11, %r10, 3;
+; SM90-NEXT:    shl.b32 %r1, %r11, 3;
+; SM90-NEXT:    mov.b32 %r12, 65535;
+; SM90-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM90-NEXT:    not.b32 %r2, %r13;
+; SM90-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM90-NEXT:    ld.u32 %r15, [%rd1];
+; SM90-NEXT:    and.b32 %r19, %r15, %r2;
+; SM90-NEXT:  $L__BB8_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r16, %r19, %r3;
+; SM90-NEXT:    or.b32 %r17, %r19, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM90-NEXT:    @%p1 bra $L__BB8_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB8_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM90-NEXT:    mov.u32 %r19, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB8_1;
+; SM90-NEXT:  $L__BB8_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new acq_rel acquire
   ret i16 %new
 }
@@ -881,6 +1256,48 @@ define i16 @seq_cst_sys_i16(ptr %addr, i16 %cmp, i16 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r14;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: seq_cst_sys_i16(
+; SM90:       {
+; SM90-NEXT:    .reg .pred %p<3>;
+; SM90-NEXT:    .reg .b16 %rs<2>;
+; SM90-NEXT:    .reg .b32 %r<20>;
+; SM90-NEXT:    .reg .b64 %rd<3>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u16 %rs1, [seq_cst_sys_i16_param_2];
+; SM90-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i16_param_0];
+; SM90-NEXT:    fence.sc.sys;
+; SM90-NEXT:    ld.param.u16 %r9, [seq_cst_sys_i16_param_1];
+; SM90-NEXT:    and.b64 %rd1, %rd2, -4;
+; SM90-NEXT:    cvt.u32.u64 %r10, %rd2;
+; SM90-NEXT:    and.b32 %r11, %r10, 3;
+; SM90-NEXT:    shl.b32 %r1, %r11, 3;
+; SM90-NEXT:    mov.b32 %r12, 65535;
+; SM90-NEXT:    shl.b32 %r13, %r12, %r1;
+; SM90-NEXT:    not.b32 %r2, %r13;
+; SM90-NEXT:    cvt.u32.u16 %r14, %rs1;
+; SM90-NEXT:    shl.b32 %r3, %r14, %r1;
+; SM90-NEXT:    shl.b32 %r4, %r9, %r1;
+; SM90-NEXT:    ld.u32 %r15, [%rd1];
+; SM90-NEXT:    and.b32 %r19, %r15, %r2;
+; SM90-NEXT:  $L__BB9_1: // %partword.cmpxchg.loop
+; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
+; SM90-NEXT:    or.b32 %r16, %r19, %r3;
+; SM90-NEXT:    or.b32 %r17, %r19, %r4;
+; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
+; SM90-NEXT:    @%p1 bra $L__BB9_3;
+; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
+; SM90-NEXT:    // in Loop: Header=BB9_1 Depth=1
+; SM90-NEXT:    and.b32 %r8, %r7, %r2;
+; SM90-NEXT:    setp.ne.s32 %p2, %r19, %r8;
+; SM90-NEXT:    mov.u32 %r19, %r8;
+; SM90-NEXT:    @%p2 bra $L__BB9_1;
+; SM90-NEXT:  $L__BB9_3: // %partword.cmpxchg.end
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r14;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i16 %cmp, i16 %new seq_cst seq_cst
   ret i16 %new
 }
@@ -912,6 +1329,19 @@ define i32 @relaxed_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    atom.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: relaxed_sys_i32(
+; SM90:       {
+; SM90-NEXT:    .reg .b32 %r<4>;
+; SM90-NEXT:    .reg .b64 %rd<2>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [relaxed_sys_i32_param_0];
+; SM90-NEXT:    ld.param.u32 %r1, [relaxed_sys_i32_param_1];
+; SM90-NEXT:    ld.param.u32 %r2, [relaxed_sys_i32_param_2];
+; SM90-NEXT:    atom.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new monotonic monotonic
   ret i32 %new
 }
@@ -942,6 +1372,19 @@ define i32 @acq_rel_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    atom.acq_rel.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acq_rel_sys_i32(
+; SM90:       {
+; SM90-NEXT:    .reg .b32 %r<4>;
+; SM90-NEXT:    .reg .b64 %rd<2>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [acq_rel_sys_i32_param_0];
+; SM90-NEXT:    ld.param.u32 %r1, [acq_rel_sys_i32_param_1];
+; SM90-NEXT:    ld.param.u32 %r2, [acq_rel_sys_i32_param_2];
+; SM90-NEXT:    atom.acq_rel.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new acq_rel acquire
   ret i32 %new
 }
@@ -972,6 +1415,19 @@ define i32 @acquire_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    atom.acquire.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acquire_sys_i32(
+; SM90:       {
+; SM90-NEXT:    .reg .b32 %r<4>;
+; SM90-NEXT:    .reg .b64 %rd<2>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [acquire_sys_i32_param_0];
+; SM90-NEXT:    ld.param.u32 %r1, [acquire_sys_i32_param_1];
+; SM90-NEXT:    ld.param.u32 %r2, [acquire_sys_i32_param_2];
+; SM90-NEXT:    atom.acquire.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new acquire acquire
   ret i32 %new
 }
@@ -1002,6 +1458,19 @@ define i32 @release_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    atom.release.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: release_sys_i32(
+; SM90:       {
+; SM90-NEXT:    .reg .b32 %r<4>;
+; SM90-NEXT:    .reg .b64 %rd<2>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [release_sys_i32_param_0];
+; SM90-NEXT:    ld.param.u32 %r1, [release_sys_i32_param_1];
+; SM90-NEXT:    ld.param.u32 %r2, [release_sys_i32_param_2];
+; SM90-NEXT:    atom.release.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new release monotonic
   ret i32 %new
 }
@@ -1036,6 +1505,21 @@ define i32 @seq_cst_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: seq_cst_sys_i32(
+; SM90:       {
+; SM90-NEXT:    .reg .b32 %r<4>;
+; SM90-NEXT:    .reg .b64 %rd<2>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [seq_cst_sys_i32_param_0];
+; SM90-NEXT:    fence.sc.sys;
+; SM90-NEXT:    ld.param.u32 %r1, [seq_cst_sys_i32_param_1];
+; SM90-NEXT:    ld.param.u32 %r2, [seq_cst_sys_i32_param_2];
+; SM90-NEXT:    atom.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new seq_cst seq_cst
   ret i32 %new
 }
@@ -1065,6 +1549,18 @@ define i64 @relaxed_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    atom.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: relaxed_sys_i64(
+; SM90:       {
+; SM90-NEXT:    .reg .b64 %rd<5>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [relaxed_sys_i64_param_0];
+; SM90-NEXT:    ld.param.u64 %rd2, [relaxed_sys_i64_param_1];
+; SM90-NEXT:    ld.param.u64 %rd3, [relaxed_sys_i64_param_2];
+; SM90-NEXT:    atom.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new monotonic monotonic
   ret i64 %new
 }
@@ -1093,6 +1589,18 @@ define i64 @acquire_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    atom.acquire.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acquire_sys_i64(
+; SM90:       {
+; SM90-NEXT:    .reg .b64 %rd<5>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [acquire_sys_i64_param_0];
+; SM90-NEXT:    ld.param.u64 %rd2, [acquire_sys_i64_param_1];
+; SM90-NEXT:    ld.param.u64 %rd3, [acquire_sys_i64_param_2];
+; SM90-NEXT:    atom.acquire.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new acquire acquire
   ret i64 %new
 }
@@ -1121,6 +1629,18 @@ define i64 @acq_rel_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    atom.acq_rel.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: acq_rel_sys_i64(
+; SM90:       {
+; SM90-NEXT:    .reg .b64 %rd<5>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [acq_rel_sys_i64_param_0];
+; SM90-NEXT:    ld.param.u64 %rd2, [acq_rel_sys_i64_param_1];
+; SM90-NEXT:    ld.param.u64 %rd3, [acq_rel_sys_i64_param_2];
+; SM90-NEXT:    atom.acq_rel.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new acq_rel acquire
   ret i64 %new
 }
@@ -1149,6 +1669,18 @@ define i64 @release_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    atom.release.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: release_sys_i64(
+; SM90:       {
+; SM90-NEXT:    .reg .b64 %rd<5>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [release_sys_i64_param_0];
+; SM90-NEXT:    ld.param.u64 %rd2, [release_sys_i64_param_1];
+; SM90-NEXT:    ld.param.u64 %rd3, [release_sys_i64_param_2];
+; SM90-NEXT:    atom.release.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new release monotonic
   ret i64 %new
 }
@@ -1181,6 +1713,20 @@ define i64 @seq_cst_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
+;
+; SM90-LABEL: seq_cst_sys_i64(
+; SM90:       {
+; SM90-NEXT:    .reg .b64 %rd<5>;
+; SM90-EMPTY:
+; SM90-NEXT:  // %bb.0:
+; SM90-NEXT:    ld.param.u64 %rd1, [seq_cst_sys_i64_param_0];
+; SM90-NEXT:    fence.sc.sys;
+; SM90-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i64_param_1];
+; SM90-NEXT:    ld.param.u64 %rd3, [seq_cst_sys_i64_param_2];
+; SM90-NEXT:    atom.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    fence.acquire.sys;
+; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
+; SM90-NEXT:    ret;
   %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new seq_cst seq_cst
   ret i64 %new
 }
