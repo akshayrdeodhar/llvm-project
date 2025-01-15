@@ -2390,6 +2390,8 @@ multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
 }
 
 // generate pattern fragments for size x memory order
+// NOTE: i8 cmpxchg is not supported in ptx, and AtomicExpandPass will emulate all i8 cmpxchgs
+// using larger-bitwidth cas
 foreach size = ["i16", "i32", "i64"] in {
   foreach order = ["", "_monotonic", "_acquire", "_release", "_acq_rel", "_seq_cst"] in {
     defm atomic_cmp_swap#_#size#order: atomic_cmp_swap_as<!cast<PatFrag>(atomic_cmp_swap#_#size#order)>;
