@@ -262,6 +262,8 @@ public:
 
   bool shouldInsertFencesForAtomic(const Instruction *) const override;
 
+  bool shouldOptimizeSeqCstCmpXchg(const Instruction *I) const override;
+
   Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
                                 AtomicOrdering Ord) const override;
   Instruction *emitTrailingFence(IRBuilderBase &Builder, Instruction *Inst,

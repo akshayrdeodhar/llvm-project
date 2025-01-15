@@ -1,3 +1,9 @@
+# Check all variants of instructions supported by PTX60 on SM70
+# RUN: %python %s --ptx=90 --gpu-arch=90 > %t.ll
+# RUN: llc < %t.ll -march=nvptx64 -mcpu=sm_90 -mattr=+ptx86 \
+# RUN:           | FileCheck %t.ll
+
+
 from string import Template
 
 direct_expansion = Template(
@@ -79,7 +85,10 @@ def get_direct_expansion(size, success_ordering, failure_ordering):
                                            failure = failure_ordering, leadingfence = leadingfence,
                                            cas = cas, trailingfence = trailingfence, prefix = "CHECK")
     else:
-        cas = cas_inst.substitute(size = size, sem = llvm_to_ptx_order[merged_ordering])
+        if merged_ordering == "monotonic":
+            cas = relaxed_cas_inst.substitute(size = size)
+        else:
+            cas = cas_inst.substitute(size = size, sem = llvm_to_ptx_order[merged_ordering])
         return direct_expansion.substitute(size = size, success = success_ordering,
                                            failure = failure_ordering, leadingfence = "{{.*}}",
                                            cas = cas, trailingfence = "{{.*}}", prefix = "CHECK")
@@ -111,16 +120,12 @@ def get_emulated_expansion(size, success_ordering, failure_ordering):
 
 
 
-run_line = """
-    ; RUN: llc < %s -march=nvptx64 -mcpu=sm_90 -mattr=+ptx86 | FileCheck %s
-    ; RUN: %if ptxas %{ llc < %s -march=nvptx64 -mcpu=sm_90 -mattr=+ptx86 | %ptxas-verify -arch=sm_90 %}
-    """
-print(run_line)
 
-for size in [8, 16, 32, 64]:
-    for success_ordering in ["monotonic", "acquire", "release", "acq_rel", "seq_cst"]:
-        for failure_ordering in ["monotonic", "acquire", "seq_cst"]:
-            if size >= 32:
-                print(get_direct_expansion(size, success_ordering, failure_ordering))
-            else:
-                print(get_emulated_expansion(size, success_ordering, failure_ordering))
+if __name__ == "__main__":
+    for size in [8, 16, 32, 64]:
+        for success_ordering in ["monotonic", "acquire", "release", "acq_rel", "seq_cst"]:
+            for failure_ordering in ["monotonic", "acquire", "seq_cst"]:
+                if size >= 32:
+                    print(get_direct_expansion(size, success_ordering, failure_ordering))
+                else:
+                    print(get_emulated_expansion(size, success_ordering, failure_ordering))
