@@ -263,7 +263,8 @@ public:
 
   bool shouldInsertFencesForAtomic(const Instruction *) const override;
 
-  AtomicOrdering atomicOperationOrderAfterFenceSplit(const Instruction *I) const override;
+  AtomicOrdering
+  atomicOperationOrderAfterFenceSplit(const Instruction *I) const override;
 
   Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
                                 AtomicOrdering Ord) const override;

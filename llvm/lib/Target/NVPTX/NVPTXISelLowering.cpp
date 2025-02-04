@@ -5605,16 +5605,16 @@ bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
           CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
 }
 
-AtomicOrdering NVPTXTargetLowering::atomicOperationOrderAfterFenceSplit(const Instruction *I) const {
+AtomicOrdering NVPTXTargetLowering::atomicOperationOrderAfterFenceSplit(
+    const Instruction *I) const {
   auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
-  bool BitwidthSupportedAndIsSeqCst = CI && 
-        CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent &&
-        cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() >=
-              STI.getMinCmpXchgSizeInBits();
-  return BitwidthSupportedAndIsSeqCst ? AtomicOrdering::Acquire : AtomicOrdering::Monotonic;
+  bool BitwidthSupportedAndIsSeqCst =
+      CI && CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent &&
+      cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() >=
+          STI.getMinCmpXchgSizeInBits();
+  return BitwidthSupportedAndIsSeqCst ? AtomicOrdering::Acquire
+                                      : AtomicOrdering::Monotonic;
 }
-
-
 
 Instruction *NVPTXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
                                                    Instruction *Inst,
@@ -5639,7 +5639,8 @@ Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
   // Specialize for cmpxchg
   if (isa<AtomicCmpXchgInst>(Inst)) {
     if (isAcquireOrStronger(Ord))
-      // TODO: don't emit an acquire fence for SeqCst, emit a cas.acquire instead.
+      // TODO: don't emit an acquire fence for SeqCst, emit a cas.acquire
+      // instead.
       return Builder.CreateFence(AtomicOrdering::Acquire);
   } else {
     return TargetLoweringBase::emitTrailingFence(Builder, Inst, Ord);

@@ -94,7 +94,9 @@ public:
     return SmVersion >= 90 && PTXVersion >= 86;
   }
 =======
-  bool fenceHasAcquireRelease() const { return SmVersion >= 90 && PTXVersion >= 86; }
+  bool fenceHasAcquireRelease() const {
+    return SmVersion >= 90 && PTXVersion >= 86;
+  }
 >>>>>>> 0e20368cd3c5 ([NVPTX] Support for fence.acquire and fence.release)
   // Does SM & PTX support atomic relaxed MMIO operations ?
   bool hasRelaxedMMIO() const { return SmVersion >= 70 && PTXVersion >= 82; }

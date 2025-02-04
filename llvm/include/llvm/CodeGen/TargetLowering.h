@@ -2176,7 +2176,8 @@ public:
   // The memory ordering that AtomicExpandPass should assign to a atomic
   // instruction that it has lowered by adding fences. This can be used
   // to "fold" one of the fences into the atomic instruction.
-  virtual AtomicOrdering atomicOperationOrderAfterFenceSplit(const Instruction *I) const {
+  virtual AtomicOrdering
+  atomicOperationOrderAfterFenceSplit(const Instruction *I) const {
     return AtomicOrdering::Monotonic;
   }
 
