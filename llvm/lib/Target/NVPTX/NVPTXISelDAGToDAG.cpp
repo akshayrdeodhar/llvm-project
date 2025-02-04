@@ -649,12 +649,7 @@ static unsigned int getFenceOp(NVPTX::Ordering O, NVPTX::Scope S,
     T->failIfClustersUnsupported(".cluster scope fence");
 
   // Fall back to .acq_rel if .acquire, .release is not supported.
-<<<<<<< HEAD
-  if (!T->hasSplitAcquireAndReleaseFences() &&
-      (O == NVPTX::Ordering::Acquire || O == NVPTX::Ordering::Release))
-=======
   if (!T->fenceHasAcquireRelease() && (O == NVPTX::Ordering::Acquire || O == NVPTX::Ordering::Release))
->>>>>>> 0e20368cd3c5 ([NVPTX] Support for fence.acquire and fence.release)
     O = NVPTX::Ordering::AcquireRelease;
 
   switch (O) {
