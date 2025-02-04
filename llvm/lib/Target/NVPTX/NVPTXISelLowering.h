@@ -17,6 +17,7 @@
 #include "NVPTX.h"
 #include "llvm/CodeGen/SelectionDAG.h"
 #include "llvm/CodeGen/TargetLowering.h"
+#include "llvm/Support/AtomicOrdering.h"
 
 namespace llvm {
 namespace NVPTXISD {
@@ -262,7 +263,7 @@ public:
 
   bool shouldInsertFencesForAtomic(const Instruction *) const override;
 
-  bool shouldOptimizeSeqCstCmpXchg(const Instruction *I) const override;
+  AtomicOrdering atomicOperationOrderAfterFenceSplit(const Instruction *I) const override;
 
   Instruction *emitLeadingFence(IRBuilderBase &Builder, Instruction *Inst,
                                 AtomicOrdering Ord) const override;

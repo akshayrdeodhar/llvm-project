@@ -5605,11 +5605,13 @@ bool NVPTXTargetLowering::shouldInsertFencesForAtomic(
           CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent);
 }
 
-bool NVPTXTargetLowering::shouldOptimizeSeqCstCmpXchg(const Instruction *I) const {
+AtomicOrdering NVPTXTargetLowering::atomicOperationOrderAfterFenceSplit(const Instruction *I) const {
   auto *CI = dyn_cast<AtomicCmpXchgInst>(I);
-  return CI && CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent &&
+  bool BitwidthSupportedAndIsSeqCst = CI && 
+        CI->getMergedOrdering() == AtomicOrdering::SequentiallyConsistent &&
         cast<IntegerType>(CI->getCompareOperand()->getType())->getBitWidth() >=
               STI.getMinCmpXchgSizeInBits();
+  return BitwidthSupportedAndIsSeqCst ? AtomicOrdering::Acquire : AtomicOrdering::Monotonic;
 }
 
 

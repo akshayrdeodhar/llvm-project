@@ -326,8 +326,7 @@ bool AtomicExpandImpl::processAtomicInstr(Instruction *I) {
       FenceOrdering = CASI->getMergedOrdering();
       // TODO: if NVPTX, then if merged ordering is SeqCst, then the CAS has to be monotomic
       // (the fence fill be fence.sc)
-      auto CASOrdering = TLI->shouldOptimizeSeqCstCmpXchg(CASI) ?
-                         AtomicOrdering::Acquire : AtomicOrdering::Monotonic;
+      auto CASOrdering = TLI->atomicOperationOrderAfterFenceSplit(CASI);
 
       CASI->setSuccessOrdering(CASOrdering);
       CASI->setFailureOrdering(CASOrdering);

@@ -2173,10 +2173,11 @@ public:
     return false;
   }
 
-  // Whether AtomicExpandPass should fold the trailing fence into the cmpxchg
-  // by choosing an appropriate memory order
-  virtual bool shouldOptimizeSeqCstCmpXchg(const Instruction *I) const {
-    return false;
+  // The memory ordering that AtomicExpandPass should assign to a atomic
+  // instruction that it has lowered by adding fences. This can be used
+  // to "fold" one of the fences into the atomic instruction.
+  virtual AtomicOrdering atomicOperationOrderAfterFenceSplit(const Instruction *I) const {
+    return AtomicOrdering::Monotonic;
   }
 
   /// Whether AtomicExpandPass should automatically insert a trailing fence
