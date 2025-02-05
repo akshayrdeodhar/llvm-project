@@ -1473,7 +1473,6 @@ define i32 @seq_cst_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM30-NEXT:    ld.param.u32 %r1, [seq_cst_sys_i32_param_1];
 ; SM30-NEXT:    ld.param.u32 %r2, [seq_cst_sys_i32_param_2];
 ; SM30-NEXT:    atom.acquire.cas.b32 %r3, [%rd1], %r1, %r2;
-; SM30-NEXT:    membar.sys;
 ; SM30-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM30-NEXT:    ret;
 ;
@@ -1488,7 +1487,6 @@ define i32 @seq_cst_sys_i32(ptr %addr, i32 %cmp, i32 %new) {
 ; SM70-NEXT:    ld.param.u32 %r1, [seq_cst_sys_i32_param_1];
 ; SM70-NEXT:    ld.param.u32 %r2, [seq_cst_sys_i32_param_2];
 ; SM70-NEXT:    atom.acquire.cas.b32 %r3, [%rd1], %r1, %r2;
-; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM70-NEXT:    ret;
 ; SM90-LABEL: seq_cst_sys_i32(
@@ -1677,7 +1675,6 @@ define i64 @seq_cst_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM30-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i64_param_1];
 ; SM30-NEXT:    ld.param.u64 %rd3, [seq_cst_sys_i64_param_2];
 ; SM30-NEXT:    atom.acquire.cas.b64 %rd4, [%rd1], %rd2, %rd3;
-; SM30-NEXT:    membar.sys;
 ; SM30-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM30-NEXT:    ret;
 ;
@@ -1691,7 +1688,6 @@ define i64 @seq_cst_sys_i64(ptr %addr, i64 %cmp, i64 %new) {
 ; SM70-NEXT:    ld.param.u64 %rd2, [seq_cst_sys_i64_param_1];
 ; SM70-NEXT:    ld.param.u64 %rd3, [seq_cst_sys_i64_param_2];
 ; SM70-NEXT:    atom.acquire.cas.b64 %rd4, [%rd1], %rd2, %rd3;
-; SM70-NEXT:    fence.acq_rel.sys;
 ; SM70-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM70-NEXT:    ret;
 ; SM90-LABEL: seq_cst_sys_i64(
