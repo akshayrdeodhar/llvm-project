@@ -1,131 +1,46 @@
-# Check all variants of instructions supported by PTX60 on SM70
-# RUN: %python %s --ptx=90 --gpu-arch=90 > %t.ll
-# RUN: llc < %t.ll -march=nvptx64 -mcpu=sm_90 -mattr=+ptx86 \
-# RUN:           | FileCheck %t.ll
-
+# For manual usage, not as a part of lit tests. Used for generating the following tests:
+# cmpxchg-sm30.ll, cmpxchg-sm70.ll, cmpxchg-sm90.ll
 
 from string import Template
+from itertools import product
 
-direct_expansion = Template(
-    """
-    define i$size @${success}_${failure}_i${size}(ptr %addr, i$size %cmp, i$size %new) {
-        ; $prefix-LABEL: ${success}_${failure}_i${size}(
-        ; $prefix: $leadingfence
-        ; $prefix: $cas
-        ; $prefix: $trailingfence
-        %pairold = cmpxchg ptr %addr, i$size %cmp, i$size %new $success $failure
-        ret i$size %new
-    }
-    """
+cmpxchg_func = Template(
+"""define i$size @${success}_${failure}_i${size}_${addrspace}(ptr${addrspace_cast} %addr, i$size %cmp, i$size %new) {
+    %pairold = cmpxchg ptr${addrspace_cast} %addr, i$size %cmp, i$size %new $success $failure
+    ret i$size %new
+}
+"""
 )
 
-emulated_expansion = Template(
-    # todo: replace the ld.u$size with "load"
-    """
-    define i$size @${success}_${failure}_i${size}(ptr %addr, i$size %cmp, i$size %new) {
-        ; $prefix-LABEL: ${success}_${failure}_i${size}(
-        ; $prefix: $leadingfence
-        ; $prefix: ld.u32
-        ; $prefix: // %partword.cmpxchg.loop
-        ; $prefix: $cas
-        ; $prefix: // %partword.cmpxchg.failure
-        ; $prefix: // %partword.cmpxchg.end
-        ; $prefix: $trailingfence
-        %pairold = cmpxchg ptr %addr, i$size %cmp, i$size %new $success $failure
-        ret i$size %new
-    }
-    """
+run_statement = Template(
+    """; RUN: llc < %s -march=nvptx64 -mcpu=sm_${sm} -mattr=+ptx${ptx} | FileCheck %s --check-prefix=SM${sm}
+; RUN: %if ptxas %{ llc < %s -march=nvptx -mcpu=sm_${sm} -mattr=+ptx${ptx} | %ptxas-verify %}
+"""
 )
 
-fence_inst = Template("fence.$sem.$scope")
-cas_inst = Template("atom.$sem.cas.b$size")
-relaxed_cas_inst = Template("atom.cas.b$size")
+TESTS = [(30, 50), (70, 60), (90, 87)]
 
-ordering_strength = {
-    "monotonic": 0,
-    "acquire": 1,
-    "release": 1,
-    "acq_rel": 2,
-    "seq_cst": 3
-}
+LLVM_SCOPES = ["", "block", "cluster", "device"]
 
-llvm_to_ptx_order = {
-    "monotonic": "relaxed",
-    "acquire": "acquire",
-    "release": "release",
-    "acq_rel": "acq_rel",
-    "seq_cst": "sc"
-}
+SCOPE_LLVM_TO_PTX = {"": "sys", "block": "cta", "cluster": "cluster", "device": "gpu"}
 
-def get_merged_ordering(success, failure):
-    if success == "acquire" and failure == "release":
-        return "acq_rel"
-    elif success == "release" and failure == "acquire":
-        return "acq_rel"
-    else:
-        if ordering_strength[success] > ordering_strength[failure]:
-            return success
-        else:
-            return failure
+SUCCESS_ORDERINGS = ["monotonic", "acquire", "release", "acq_rel", "seq_cst"]
 
-def get_fence_inst(ordering, scope):
-    ptx_ordering = llvm_to_ptx_order[ordering]
-    return fence_inst.substitute(sem = llvm_to_ptx_order[ordering], scope = "sys")
+FAILURE_ORDERINGS = ["monotonic", "acquire", "seq_cst"]
 
-def get_cas_inst(ordering, size):
-    return cas_inst.substitute(sem = llvm_to_ptx_order[ordering], size = str(size))
+SIZES = [8, 16, 32, 64]
 
-def get_direct_expansion(size, success_ordering, failure_ordering):
-    merged_ordering = get_merged_ordering(success_ordering, failure_ordering)
-    if merged_ordering == "seq_cst":
-        leadingfence = get_fence_inst("seq_cst", "sys")
-        cas = get_cas_inst("acquire", size)
-        trailingfence = "{{.*}}"
-        return direct_expansion.substitute(size = size, success = success_ordering, 
-                                           failure = failure_ordering, leadingfence = leadingfence,
-                                           cas = cas, trailingfence = trailingfence, prefix = "CHECK")
-    else:
-        if merged_ordering == "monotonic":
-            cas = relaxed_cas_inst.substitute(size = size)
-        else:
-            cas = cas_inst.substitute(size = size, sem = llvm_to_ptx_order[merged_ordering])
-        return direct_expansion.substitute(size = size, success = success_ordering,
-                                           failure = failure_ordering, leadingfence = "{{.*}}",
-                                           cas = cas, trailingfence = "{{.*}}", prefix = "CHECK")
+ADDRSPACES = [0, 1, 3]
 
-
-def get_leading_fence(success_ordering, failure_ordering):
-    merged_ordering = get_merged_ordering(success_ordering, failure_ordering)
-    if merged_ordering == "seq_cst":
-        return fence_inst.substitute(sem = llvm_to_ptx_order["seq_cst"], scope = "sys")
-    elif ordering_strength[merged_ordering] >= ordering_strength["release"] and not merged_ordering == "acquire":
-        return fence_inst.substitute(sem = llvm_to_ptx_order["release"], scope = "sys")
-    else:
-        return "{{.*}}"
-
-def get_trailing_fence(success_ordering, failure_ordering):
-    merged_ordering = get_merged_ordering(success_ordering, failure_ordering)
-    if ordering_strength[merged_ordering] >= ordering_strength["acquire"] and not merged_ordering == "release":
-        return fence_inst.substitute(sem = llvm_to_ptx_order["acquire"], scope = "sys")
-    else:
-        return "{{.*}}"
-
-def get_emulated_expansion(size, success_ordering, failure_ordering):
-    leading_fence = get_leading_fence(success_ordering, failure_ordering)
-    trailing_fence = get_trailing_fence(success_ordering, failure_ordering)
-    cas = relaxed_cas_inst.substitute(size = "32")
-    return emulated_expansion.substitute(size = size, success = success_ordering,
-                                         failure = failure_ordering, leadingfence = leading_fence,
-                                         cas = cas, trailingfence = trailing_fence, prefix = "CHECK")
-
-
-
+ADDRSPACE_NUM_TO_ADDRSPACE = {0: "generic", 1: "global", 3: "shared"}
 
 if __name__ == "__main__":
-    for size in [8, 16, 32, 64]:
-        for success_ordering in ["monotonic", "acquire", "release", "acq_rel", "seq_cst"]:
-            for failure_ordering in ["monotonic", "acquire", "seq_cst"]:
-                if size >= 32:
-                    print(get_direct_expansion(size, success_ordering, failure_ordering))
+    for sm, ptx in TESTS:
+        with open("cmpxchg-sm{}.ll".format(str(sm)), "w") as fp:
+            print(run_statement.substitute(sm=sm, ptx=ptx), file=fp)
+            for size, success, failure, addrspace in product(SIZES, SUCCESS_ORDERINGS, FAILURE_ORDERINGS, ADDRSPACES):
+                if addrspace == 0:
+                    addrspace_cast = ""
                 else:
-                    print(get_emulated_expansion(size, success_ordering, failure_ordering))
+                    addrspace_cast = " addrspace({})".format(str(addrspace))
+                print(cmpxchg_func.substitute(success=success, failure=failure, size=size, addrspace=ADDRSPACE_NUM_TO_ADDRSPACE[addrspace], addrspace_cast=addrspace_cast), file=fp)

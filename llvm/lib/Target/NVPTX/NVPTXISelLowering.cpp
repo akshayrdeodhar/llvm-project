@@ -5621,12 +5621,11 @@ Instruction *NVPTXTargetLowering::emitLeadingFence(IRBuilderBase &Builder,
                                                    AtomicOrdering Ord) const {
   // Specialize for cmpxchg
   if (isa<AtomicCmpXchgInst>(Inst)) {
-    if (isReleaseOrStronger(Ord)) {
-      if (Ord != AtomicOrdering::SequentiallyConsistent)
-        return Builder.CreateFence(AtomicOrdering::Release);
-      else
-        return Builder.CreateFence(AtomicOrdering::SequentiallyConsistent);
-    }
+    // Emit a fence.sc leading fence for cmpxchg seq_cst which are not emulated
+    if (isReleaseOrStronger(Ord))
+      return Ord == AtomicOrdering::SequentiallyConsistent ?
+             Builder.CreateFence(AtomicOrdering::SequentiallyConsistent) :
+             Builder.CreateFence(AtomicOrdering::Release);
   } else {
     return TargetLoweringBase::emitLeadingFence(Builder, Inst, Ord);
   }
@@ -5638,10 +5637,13 @@ Instruction *NVPTXTargetLowering::emitTrailingFence(IRBuilderBase &Builder,
                                                     AtomicOrdering Ord) const {
   // Specialize for cmpxchg
   if (isa<AtomicCmpXchgInst>(Inst)) {
+    auto CASWidth= cast<IntegerType>(dyn_cast<AtomicCmpXchgInst>(Inst)->getCompareOperand()->getType())->getBitWidth();
+    // Do not emit a trailing fence for cmpxchg seq_cst which are not emulated
     if (isAcquireOrStronger(Ord))
-      // TODO: don't emit an acquire fence for SeqCst, emit a cas.acquire
-      // instead.
-      return Builder.CreateFence(AtomicOrdering::Acquire);
+      return (Ord == AtomicOrdering::SequentiallyConsistent
+              && CASWidth >= STI.getMinCmpXchgSizeInBits()) ?
+              nullptr :
+              Builder.CreateFence(AtomicOrdering::Acquire);
   } else {
     return TargetLoweringBase::emitTrailingFence(Builder, Inst, Ord);
   }
