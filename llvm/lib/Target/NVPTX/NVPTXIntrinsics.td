@@ -2398,7 +2398,7 @@ multiclass ternary_atomic_op_as {
 // using larger-bitwidth cas
 foreach size = ["i16", "i32", "i64"] in {
   foreach order = ["", "_monotonic", "_acquire", "_release", "_acq_rel", "_seq_cst"] in {
-    defm atomic_cmp_swap#_#size#order: ternary_atomic_op_newas;
+    defm atomic_cmp_swap#_#size#order: ternary_atomic_op_as;
   }
 }
 
@@ -2442,7 +2442,7 @@ foreach size = ["32", "64"] in {
   // Note that AtomicExpand will convert cmpxchg seq_cst to a cmpxchg monotonic with fences around it.
   foreach order = ["acquire", "release", "acq_rel", ""] in {
     if !eq(order, "") then {
-      defm INT_PTX_ATOM_CAS_#size : INT_PTX_ATOM_CAS_AS<"atomic_cmp_swap_i"#size, size, "">;
+      defm INT_PTX_ATOM_CAS_#size : INT_PTX_ATOM_CAS_AS<"atomic_cmp_swap_i"#size, size, ".relaxed">;
     } else {
       defm INT_PTX_ATOM_CAS_#size#_#order : INT_PTX_ATOM_CAS_AS<"atomic_cmp_swap_i"#size#_#order, size, "."#order>;
     }

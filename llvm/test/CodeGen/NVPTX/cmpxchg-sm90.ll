@@ -31,7 +31,7 @@ define i8 @monotonic_monotonic_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB0_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -76,7 +76,7 @@ define i8 @monotonic_monotonic_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB1_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -121,7 +121,7 @@ define i8 @monotonic_monotonic_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB2_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -166,7 +166,7 @@ define i8 @monotonic_acquire_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB3_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -212,7 +212,7 @@ define i8 @monotonic_acquire_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB4_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -258,7 +258,7 @@ define i8 @monotonic_acquire_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB5_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -305,7 +305,7 @@ define i8 @monotonic_seq_cst_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB6_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -352,7 +352,7 @@ define i8 @monotonic_seq_cst_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB7_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -399,7 +399,7 @@ define i8 @monotonic_seq_cst_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB8_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -445,7 +445,7 @@ define i8 @acquire_monotonic_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB9_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -491,7 +491,7 @@ define i8 @acquire_monotonic_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB10_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -537,7 +537,7 @@ define i8 @acquire_monotonic_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB11_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -583,7 +583,7 @@ define i8 @acquire_acquire_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB12_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -629,7 +629,7 @@ define i8 @acquire_acquire_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB13_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -675,7 +675,7 @@ define i8 @acquire_acquire_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB14_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -722,7 +722,7 @@ define i8 @acquire_seq_cst_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB15_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -769,7 +769,7 @@ define i8 @acquire_seq_cst_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB16_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -816,7 +816,7 @@ define i8 @acquire_seq_cst_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB17_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -863,7 +863,7 @@ define i8 @release_monotonic_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB18_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -909,7 +909,7 @@ define i8 @release_monotonic_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB19_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -955,7 +955,7 @@ define i8 @release_monotonic_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB20_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1001,7 +1001,7 @@ define i8 @release_acquire_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB21_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1048,7 +1048,7 @@ define i8 @release_acquire_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB22_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1095,7 +1095,7 @@ define i8 @release_acquire_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB23_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1142,7 +1142,7 @@ define i8 @release_seq_cst_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB24_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1189,7 +1189,7 @@ define i8 @release_seq_cst_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB25_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1236,7 +1236,7 @@ define i8 @release_seq_cst_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB26_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1283,7 +1283,7 @@ define i8 @acq_rel_monotonic_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB27_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1330,7 +1330,7 @@ define i8 @acq_rel_monotonic_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB28_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1377,7 +1377,7 @@ define i8 @acq_rel_monotonic_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB29_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1424,7 +1424,7 @@ define i8 @acq_rel_acquire_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB30_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1471,7 +1471,7 @@ define i8 @acq_rel_acquire_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB31_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1518,7 +1518,7 @@ define i8 @acq_rel_acquire_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB32_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1565,7 +1565,7 @@ define i8 @acq_rel_seq_cst_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB33_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1612,7 +1612,7 @@ define i8 @acq_rel_seq_cst_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB34_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1659,7 +1659,7 @@ define i8 @acq_rel_seq_cst_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB35_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1706,7 +1706,7 @@ define i8 @seq_cst_monotonic_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB36_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1753,7 +1753,7 @@ define i8 @seq_cst_monotonic_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB37_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1800,7 +1800,7 @@ define i8 @seq_cst_monotonic_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new)
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB38_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1847,7 +1847,7 @@ define i8 @seq_cst_acquire_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB39_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1894,7 +1894,7 @@ define i8 @seq_cst_acquire_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB40_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1941,7 +1941,7 @@ define i8 @seq_cst_acquire_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB41_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -1988,7 +1988,7 @@ define i8 @seq_cst_seq_cst_i8_generic(ptr %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB42_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2035,7 +2035,7 @@ define i8 @seq_cst_seq_cst_i8_global(ptr addrspace(1) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB43_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2082,7 +2082,7 @@ define i8 @seq_cst_seq_cst_i8_shared(ptr addrspace(3) %addr, i8 %cmp, i8 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r17, %r20, %r3;
 ; SM90-NEXT:    or.b32 %r18, %r20, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r18, %r17;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r18, %r17;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r18;
 ; SM90-NEXT:    @%p1 bra $L__BB44_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2127,7 +2127,7 @@ define i16 @monotonic_monotonic_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB45_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2171,7 +2171,7 @@ define i16 @monotonic_monotonic_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB46_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2215,7 +2215,7 @@ define i16 @monotonic_monotonic_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB47_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2259,7 +2259,7 @@ define i16 @monotonic_acquire_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB48_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2304,7 +2304,7 @@ define i16 @monotonic_acquire_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB49_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2349,7 +2349,7 @@ define i16 @monotonic_acquire_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB50_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2395,7 +2395,7 @@ define i16 @monotonic_seq_cst_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB51_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2441,7 +2441,7 @@ define i16 @monotonic_seq_cst_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB52_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2487,7 +2487,7 @@ define i16 @monotonic_seq_cst_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB53_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2532,7 +2532,7 @@ define i16 @acquire_monotonic_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB54_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2577,7 +2577,7 @@ define i16 @acquire_monotonic_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB55_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2622,7 +2622,7 @@ define i16 @acquire_monotonic_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB56_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2667,7 +2667,7 @@ define i16 @acquire_acquire_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB57_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2712,7 +2712,7 @@ define i16 @acquire_acquire_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB58_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2757,7 +2757,7 @@ define i16 @acquire_acquire_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB59_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2803,7 +2803,7 @@ define i16 @acquire_seq_cst_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB60_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2849,7 +2849,7 @@ define i16 @acquire_seq_cst_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB61_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2895,7 +2895,7 @@ define i16 @acquire_seq_cst_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB62_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2941,7 +2941,7 @@ define i16 @release_monotonic_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB63_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -2986,7 +2986,7 @@ define i16 @release_monotonic_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB64_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3031,7 +3031,7 @@ define i16 @release_monotonic_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB65_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3076,7 +3076,7 @@ define i16 @release_acquire_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB66_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3122,7 +3122,7 @@ define i16 @release_acquire_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB67_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3168,7 +3168,7 @@ define i16 @release_acquire_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB68_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3214,7 +3214,7 @@ define i16 @release_seq_cst_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB69_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3260,7 +3260,7 @@ define i16 @release_seq_cst_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB70_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3306,7 +3306,7 @@ define i16 @release_seq_cst_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB71_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3352,7 +3352,7 @@ define i16 @acq_rel_monotonic_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB72_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3398,7 +3398,7 @@ define i16 @acq_rel_monotonic_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB73_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3444,7 +3444,7 @@ define i16 @acq_rel_monotonic_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB74_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3490,7 +3490,7 @@ define i16 @acq_rel_acquire_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB75_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3536,7 +3536,7 @@ define i16 @acq_rel_acquire_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB76_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3582,7 +3582,7 @@ define i16 @acq_rel_acquire_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB77_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3628,7 +3628,7 @@ define i16 @acq_rel_seq_cst_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB78_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3674,7 +3674,7 @@ define i16 @acq_rel_seq_cst_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB79_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3720,7 +3720,7 @@ define i16 @acq_rel_seq_cst_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB80_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3766,7 +3766,7 @@ define i16 @seq_cst_monotonic_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB81_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3812,7 +3812,7 @@ define i16 @seq_cst_monotonic_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB82_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3858,7 +3858,7 @@ define i16 @seq_cst_monotonic_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB83_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3904,7 +3904,7 @@ define i16 @seq_cst_acquire_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB84_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3950,7 +3950,7 @@ define i16 @seq_cst_acquire_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB85_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -3996,7 +3996,7 @@ define i16 @seq_cst_acquire_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB86_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -4042,7 +4042,7 @@ define i16 @seq_cst_seq_cst_i16_generic(ptr %addr, i16 %cmp, i16 %new) {
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB87_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -4088,7 +4088,7 @@ define i16 @seq_cst_seq_cst_i16_global(ptr addrspace(1) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.global.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB88_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -4134,7 +4134,7 @@ define i16 @seq_cst_seq_cst_i16_shared(ptr addrspace(3) %addr, i16 %cmp, i16 %ne
 ; SM90-NEXT:    // =>This Inner Loop Header: Depth=1
 ; SM90-NEXT:    or.b32 %r16, %r19, %r3;
 ; SM90-NEXT:    or.b32 %r17, %r19, %r4;
-; SM90-NEXT:    atom.shared.cas.b32 %r7, [%rd1], %r17, %r16;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r7, [%rd1], %r17, %r16;
 ; SM90-NEXT:    setp.eq.s32 %p1, %r7, %r17;
 ; SM90-NEXT:    @%p1 bra $L__BB89_3;
 ; SM90-NEXT:  // %bb.2: // %partword.cmpxchg.failure
@@ -4161,7 +4161,7 @@ define i32 @monotonic_monotonic_i32_generic(ptr %addr, i32 %cmp, i32 %new) {
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i32_generic_param_0];
 ; SM90-NEXT:    ld.param.u32 %r1, [monotonic_monotonic_i32_generic_param_1];
 ; SM90-NEXT:    ld.param.u32 %r2, [monotonic_monotonic_i32_generic_param_2];
-; SM90-NEXT:    atom.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    atom.relaxed.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr %addr, i32 %cmp, i32 %new monotonic monotonic
@@ -4178,7 +4178,7 @@ define i32 @monotonic_monotonic_i32_global(ptr addrspace(1) %addr, i32 %cmp, i32
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i32_global_param_0];
 ; SM90-NEXT:    ld.param.u32 %r1, [monotonic_monotonic_i32_global_param_1];
 ; SM90-NEXT:    ld.param.u32 %r2, [monotonic_monotonic_i32_global_param_2];
-; SM90-NEXT:    atom.global.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    atom.relaxed.global.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr addrspace(1) %addr, i32 %cmp, i32 %new monotonic monotonic
@@ -4195,7 +4195,7 @@ define i32 @monotonic_monotonic_i32_shared(ptr addrspace(3) %addr, i32 %cmp, i32
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i32_shared_param_0];
 ; SM90-NEXT:    ld.param.u32 %r1, [monotonic_monotonic_i32_shared_param_1];
 ; SM90-NEXT:    ld.param.u32 %r2, [monotonic_monotonic_i32_shared_param_2];
-; SM90-NEXT:    atom.shared.cas.b32 %r3, [%rd1], %r1, %r2;
+; SM90-NEXT:    atom.relaxed.shared.cas.b32 %r3, [%rd1], %r1, %r2;
 ; SM90-NEXT:    st.param.b32 [func_retval0], %r2;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr addrspace(3) %addr, i32 %cmp, i32 %new monotonic monotonic
@@ -4946,7 +4946,7 @@ define i64 @monotonic_monotonic_i64_generic(ptr %addr, i64 %cmp, i64 %new) {
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i64_generic_param_0];
 ; SM90-NEXT:    ld.param.u64 %rd2, [monotonic_monotonic_i64_generic_param_1];
 ; SM90-NEXT:    ld.param.u64 %rd3, [monotonic_monotonic_i64_generic_param_2];
-; SM90-NEXT:    atom.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    atom.relaxed.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr %addr, i64 %cmp, i64 %new monotonic monotonic
@@ -4962,7 +4962,7 @@ define i64 @monotonic_monotonic_i64_global(ptr addrspace(1) %addr, i64 %cmp, i64
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i64_global_param_0];
 ; SM90-NEXT:    ld.param.u64 %rd2, [monotonic_monotonic_i64_global_param_1];
 ; SM90-NEXT:    ld.param.u64 %rd3, [monotonic_monotonic_i64_global_param_2];
-; SM90-NEXT:    atom.global.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    atom.relaxed.global.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr addrspace(1) %addr, i64 %cmp, i64 %new monotonic monotonic
@@ -4978,7 +4978,7 @@ define i64 @monotonic_monotonic_i64_shared(ptr addrspace(3) %addr, i64 %cmp, i64
 ; SM90-NEXT:    ld.param.u64 %rd1, [monotonic_monotonic_i64_shared_param_0];
 ; SM90-NEXT:    ld.param.u64 %rd2, [monotonic_monotonic_i64_shared_param_1];
 ; SM90-NEXT:    ld.param.u64 %rd3, [monotonic_monotonic_i64_shared_param_2];
-; SM90-NEXT:    atom.shared.cas.b64 %rd4, [%rd1], %rd2, %rd3;
+; SM90-NEXT:    atom.relaxed.shared.cas.b64 %rd4, [%rd1], %rd2, %rd3;
 ; SM90-NEXT:    st.param.b64 [func_retval0], %rd3;
 ; SM90-NEXT:    ret;
     %pairold = cmpxchg ptr addrspace(3) %addr, i64 %cmp, i64 %new monotonic monotonic
