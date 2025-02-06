@@ -14,11 +14,11 @@ cmpxchg_func = Template(
 
 run_statement = Template(
     """; RUN: llc < %s -march=nvptx64 -mcpu=sm_${sm} -mattr=+ptx${ptx} | FileCheck %s --check-prefix=SM${sm}
-; RUN: %if ptxas %{ llc < %s -march=nvptx -mcpu=sm_${sm} -mattr=+ptx${ptx} | %ptxas-verify %}
+; RUN: %if ptxas %{ llc < %s -march=nvptx64 -mcpu=sm_${sm} -mattr=+ptx${ptx} | %ptxas-verify -arch=sm_${sm} %}
 """
 )
 
-TESTS = [(30, 50), (70, 60), (90, 87)]
+TESTS = [(60, 50), (70, 63), (90, 87)]
 
 LLVM_SCOPES = ["", "block", "cluster", "device"]
 

@@ -2378,15 +2378,19 @@ defm INT_PTX_ATOM_XOR_GEN_64 : F_ATOMIC_2<i64, Int64Regs, "", ".b64", ".xor",
 defm INT_PTX_ATOM_XOR_GEN_64_USE_G : F_ATOMIC_2<i64, Int64Regs, ".global", ".b64",
   ".xor", atomic_load_xor_i64_gen, i64imm, imm, [hasSM<32>]>;
 
-// atom.cas
-// generate pattern fragments for matching address spaces
-multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
-    def _gen: ATOMIC_GENERIC_CHK<(ops node:$a, node:$b, node:$c),
-    (SizeFrag node:$a, node:$b, node:$c)>;
-    def _g: ATOMIC_GLOBAL_CHK<(ops node:$a, node:$b, node:$c),
-    (SizeFrag node:$a, node:$b, node:$c)>;
-    def _s: ATOMIC_SHARED_CHK<(ops node:$a, node:$b, node:$c),
-    (SizeFrag node:$a, node:$b, node:$c)>;
+multiclass ternary_atomic_op_as {
+  // one record per address space
+  def NAME#_gen: PatFrag<(ops node:$ptr, node:$cmp, node:$val),
+      (!cast<SDPatternOperator>(NAME) node:$ptr, node:$cmp, node:$val),
+      AS_match.generic>;
+
+  def NAME#_g: PatFrag<(ops node:$ptr, node:$cmp, node:$val),
+      (!cast<SDPatternOperator>(NAME) node:$ptr, node:$cmp, node:$val),
+      AS_match.global>;
+
+  def NAME#_s: PatFrag<(ops node:$ptr, node:$cmp, node:$val),
+      (!cast<SDPatternOperator>(NAME) node:$ptr, node:$cmp, node:$val),
+      AS_match.shared>;
 }
 
 // generate pattern fragments for size x memory order
@@ -2394,24 +2398,39 @@ multiclass atomic_cmp_swap_as<PatFrag SizeFrag> {
 // using larger-bitwidth cas
 foreach size = ["i16", "i32", "i64"] in {
   foreach order = ["", "_monotonic", "_acquire", "_release", "_acq_rel", "_seq_cst"] in {
-    defm atomic_cmp_swap#_#size#order: atomic_cmp_swap_as<!cast<PatFrag>(atomic_cmp_swap#_#size#order)>;
+    defm atomic_cmp_swap#_#size#order: ternary_atomic_op_newas;
   }
 }
 
-// defines atom.cas for each address space
 multiclass INT_PTX_ATOM_CAS_AS<string atomic_cmp_swap_without_as, string type, string order> {
   // eg. with type = 32, order = .acquire, atomic_cmp_swap_without_as = atomic_cmp_swap_i32_acquire, and _GEN becomes
   // F_ATOMIC_3<i32, Int32Regs, ".acquire", ".b32", ".cas", atomic_cmp_swap_i32_acquire, i32imm>
+
+
+  // For SM70, PTX63 +, memory orders are supported
   defm _GEN: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), order, "", ".b"#type, ".cas",
-                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm")>;
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm"), [hasSM<70>, hasPTX<63>]>;
 
   defm _GEN_USE_G: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), order, ".global", ".b"#type, ".cas",
-                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm")>;
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm"), [hasSM<70>, hasPTX<63>]>;
 
   defm _G: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), order, ".global", ".b"#type, ".cas",
-                       !cast<PatFrag>(atomic_cmp_swap_without_as#_g), !cast<Operand>("i"#type#"imm")>;
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_g), !cast<Operand>("i"#type#"imm"), [hasSM<70>, hasPTX<63>]>;
 
   defm _S: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), order, ".shared", ".b"#type, ".cas",
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_s), !cast<Operand>("i"#type#"imm"), [hasSM<70>, hasPTX<63>]>;
+
+  // For older archs, we fall back to lowering to relaxed atom.cas
+  defm _GEN_OLD: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), "", "", ".b"#type, ".cas",
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm")>;
+
+  defm _GEN_USE_G_OLD: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), "", ".global", ".b"#type, ".cas",
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_gen), !cast<Operand>("i"#type#"imm")>;
+
+  defm _G_OLD: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), "", ".global", ".b"#type, ".cas",
+                       !cast<PatFrag>(atomic_cmp_swap_without_as#_g), !cast<Operand>("i"#type#"imm")>;
+
+  defm _S_OLD: F_ATOMIC_3<!cast<ValueType>("i"#type), !cast<NVPTXRegClass>("Int"#type#"Regs"), "", ".shared", ".b"#type, ".cas",
                        !cast<PatFrag>(atomic_cmp_swap_without_as#_s), !cast<Operand>("i"#type#"imm")>;
 }
 
