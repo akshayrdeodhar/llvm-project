@@ -20,7 +20,6 @@
 #include "llvm/Analysis/InstSimplifyFolder.h"
 #include "llvm/Analysis/OptimizationRemarkEmitter.h"
 #include "llvm/CodeGen/AtomicExpand.h"
-#include "llvm/CodeGen/AtomicExpandUtils.h"
 #include "llvm/CodeGen/TargetLowering.h"
 #include "llvm/CodeGen/TargetPassConfig.h"
 #include "llvm/CodeGen/TargetSubtargetInfo.h"
@@ -67,6 +66,14 @@ class AtomicExpandImpl {
   const DataLayout *DL = nullptr;
 
 private:
+  /// Callback type for emitting a cmpxchg instruction during RMW expansion.
+  /// Parameters: (Builder, Addr, Loaded, NewVal, AddrAlign, MemOpOrder,
+  ///              SSID, IsVolatile, /* OUT */ Success, /* OUT */ NewLoaded,
+  ///              MetadataSrc)
+  using CreateCmpXchgInstFun = function_ref<void(
+      IRBuilderBase &, Value *, Value *, Value *, Align, AtomicOrdering,
+      SyncScope::ID, Value *&, Value *&, Instruction *)>;
+
   void handleFailure(Instruction &FailedInst, const Twine &Msg) const {
     LLVMContext &Ctx = FailedInst.getContext();
 
@@ -126,8 +133,7 @@ private:
   void expandAtomicRMWToLibcall(AtomicRMWInst *I);
   void expandAtomicCASToLibcall(AtomicCmpXchgInst *I);
 
-  friend bool
-  llvm::expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
+  bool expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
                                  CreateCmpXchgInstFun CreateCmpXchg);
 
   bool processAtomicInstr(Instruction *I);
@@ -1742,8 +1748,7 @@ bool AtomicExpandImpl::tryExpandAtomicCmpXchg(AtomicCmpXchgInst *CI) {
   }
 }
 
-// Note: This function is exposed externally by AtomicExpandUtils.h
-bool llvm::expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
+bool AtomicExpandImpl::expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
                                     CreateCmpXchgInstFun CreateCmpXchg) {
   ReplacementIRBuilder Builder(AI, AI->getDataLayout());
   Builder.setIsFPConstrained(
