@@ -134,7 +134,7 @@ private:
   void expandAtomicCASToLibcall(AtomicCmpXchgInst *I);
 
   bool expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
-                                 CreateCmpXchgInstFun CreateCmpXchg);
+                                CreateCmpXchgInstFun CreateCmpXchg);
 
   bool processAtomicInstr(Instruction *I);
 
@@ -1748,8 +1748,8 @@ bool AtomicExpandImpl::tryExpandAtomicCmpXchg(AtomicCmpXchgInst *CI) {
   }
 }
 
-bool AtomicExpandImpl::expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
-                                    CreateCmpXchgInstFun CreateCmpXchg) {
+bool AtomicExpandImpl::expandAtomicRMWToCmpXchg(
+    AtomicRMWInst *AI, CreateCmpXchgInstFun CreateCmpXchg) {
   ReplacementIRBuilder Builder(AI, AI->getDataLayout());
   Builder.setIsFPConstrained(
       AI->getFunction()->hasFnAttribute(Attribute::StrictFP));
