@@ -1034,9 +1034,10 @@ void AtomicExpandImpl::expandPartwordAtomicRMW(
 
   Value *OldResult;
   if (ExpansionKind == TargetLoweringBase::AtomicExpansionKind::CmpXChg) {
-    OldResult = insertRMWCmpXchgLoop(
-        Builder, PMV.WordType, PMV.AlignedAddr, PMV.AlignedAddrAlignment,
-        MemOpOrder, SSID, AI->isVolatile(), PerformPartwordOp, createCmpXchgInstFun, AI);
+    OldResult = insertRMWCmpXchgLoop(Builder, PMV.WordType, PMV.AlignedAddr,
+                                     PMV.AlignedAddrAlignment, MemOpOrder, SSID,
+                                     AI->isVolatile(), PerformPartwordOp,
+                                     createCmpXchgInstFun, AI);
   } else {
     assert(ExpansionKind == TargetLoweringBase::AtomicExpansionKind::LLSC);
     OldResult = insertRMWLLSCLoop(Builder, PMV.WordType, PMV.AlignedAddr,
@@ -1779,8 +1780,8 @@ bool AtomicExpandImpl::tryExpandAtomicCmpXchg(AtomicCmpXchgInst *CI) {
   }
 }
 
-bool AtomicExpandImpl::expandAtomicRMWToCmpXchg(AtomicRMWInst *AI,
-                                    CreateCmpXchgInstFun CreateCmpXchg) {
+bool AtomicExpandImpl::expandAtomicRMWToCmpXchg(
+    AtomicRMWInst *AI, CreateCmpXchgInstFun CreateCmpXchg) {
   ReplacementIRBuilder Builder(AI, AI->getDataLayout());
   Builder.setIsFPConstrained(
       AI->getFunction()->hasFnAttribute(Attribute::StrictFP));
@@ -1950,8 +1951,8 @@ void AtomicExpandImpl::expandAtomicRMWToLibcall(AtomicRMWInst *I) {
     expandAtomicRMWToCmpXchg(
         I, [this](IRBuilderBase &Builder, Value *Addr, Value *Loaded,
                   Value *NewVal, Align Alignment, AtomicOrdering MemOpOrder,
-                  SyncScope::ID SSID, bool IsVolatile, Value *&Success, Value *&NewLoaded,
-                  Instruction *MetadataSrc) {
+                  SyncScope::ID SSID, bool IsVolatile, Value *&Success,
+                  Value *&NewLoaded, Instruction *MetadataSrc) {
           // Create the CAS instruction normally...
           AtomicCmpXchgInst *Pair = Builder.CreateAtomicCmpXchg(
               Addr, Loaded, NewVal, Alignment, MemOpOrder,
