@@ -3,7 +3,8 @@
 
 define float @test_atomicrmw_fadd_f32(ptr %ptr, float %value) !prof !0 {
 ; CHECK-LABEL: @test_atomicrmw_fadd_f32(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP6:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP6]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP5:%.*]], [[ATOMICRMW_START]] ]
@@ -24,7 +25,8 @@ define float @test_atomicrmw_fadd_f32(ptr %ptr, float %value) !prof !0 {
 
 define float @test_atomicrmw_fsub_f32(ptr %ptr, float %value) {
 ; CHECK-LABEL: @test_atomicrmw_fsub_f32(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP6:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP6]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP5:%.*]], [[ATOMICRMW_START]] ]
@@ -45,7 +47,8 @@ define float @test_atomicrmw_fsub_f32(ptr %ptr, float %value) {
 
 define float @atomicrmw_fmin_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fmin_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -66,7 +69,8 @@ define float @atomicrmw_fmin_float(ptr %ptr, float %value) {
 
 define float @atomicrmw_fmax_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fmax_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -87,7 +91,8 @@ define float @atomicrmw_fmax_float(ptr %ptr, float %value) {
 
 define double @atomicrmw_fmin_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fmin_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -108,7 +113,8 @@ define double @atomicrmw_fmin_double(ptr %ptr, double %value) {
 
 define double @atomicrmw_fmax_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fmax_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -129,7 +135,8 @@ define double @atomicrmw_fmax_double(ptr %ptr, double %value) {
 
 define float @atomicrmw_fminimum_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fminimum_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -150,7 +157,8 @@ define float @atomicrmw_fminimum_float(ptr %ptr, float %value) {
 
 define float @atomicrmw_fmaximum_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fmaximum_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -171,7 +179,8 @@ define float @atomicrmw_fmaximum_float(ptr %ptr, float %value) {
 
 define double @atomicrmw_fminimum_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fminimum_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -192,7 +201,8 @@ define double @atomicrmw_fminimum_double(ptr %ptr, double %value) {
 
 define double @atomicrmw_fmaximum_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fmaximum_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -213,7 +223,8 @@ define double @atomicrmw_fmaximum_double(ptr %ptr, double %value) {
 
 define bfloat @atomicrmw_fmaximum_bfloat(ptr %ptr, bfloat %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximum_bfloat(
-; CHECK-NEXT:    [[TMP1:%.*]] = load bfloat, ptr [[PTR:%.*]], align 2
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i16, ptr [[PTR:%.*]] monotonic, align 2
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i16 [[TMP7]] to bfloat
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi bfloat [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -234,7 +245,8 @@ define bfloat @atomicrmw_fmaximum_bfloat(ptr %ptr, bfloat %val) {
 
 define half @atomicrmw_fmaximum_half(ptr %ptr, half %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximum_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load half, ptr [[PTR:%.*]], align 2
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i16, ptr [[PTR:%.*]] monotonic, align 2
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i16 [[TMP7]] to half
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi half [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -255,7 +267,8 @@ define half @atomicrmw_fmaximum_half(ptr %ptr, half %val) {
 
 define <2 x half> @atomicrmw_fmaximum_2_x_half(ptr %ptr, <2 x half> %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximum_2_x_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x half>, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to <2 x half>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x half> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -276,7 +289,8 @@ define <2 x half> @atomicrmw_fmaximum_2_x_half(ptr %ptr, <2 x half> %val) {
 
 define bfloat @atomicrmw_fminimum_bfloat(ptr %ptr, bfloat %val) {
 ; CHECK-LABEL: @atomicrmw_fminimum_bfloat(
-; CHECK-NEXT:    [[TMP1:%.*]] = load bfloat, ptr [[PTR:%.*]], align 2
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i16, ptr [[PTR:%.*]] monotonic, align 2
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i16 [[TMP7]] to bfloat
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi bfloat [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -297,7 +311,8 @@ define bfloat @atomicrmw_fminimum_bfloat(ptr %ptr, bfloat %val) {
 
 define half @atomicrmw_fminimum_half(ptr %ptr, half %val) {
 ; CHECK-LABEL: @atomicrmw_fminimum_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load half, ptr [[PTR:%.*]], align 2
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i16, ptr [[PTR:%.*]] monotonic, align 2
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i16 [[TMP7]] to half
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi half [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -318,7 +333,8 @@ define half @atomicrmw_fminimum_half(ptr %ptr, half %val) {
 
 define <2 x half> @atomicrmw_fminimum_2_x_half(ptr %ptr, <2 x half> %val) {
 ; CHECK-LABEL: @atomicrmw_fminimum_2_x_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x half>, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to <2 x half>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x half> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -339,7 +355,8 @@ define <2 x half> @atomicrmw_fminimum_2_x_half(ptr %ptr, <2 x half> %val) {
 
 define <2 x half> @atomicrmw_fmaximumnum_2_x_half(ptr %ptr, <2 x half> %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximumnum_2_x_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x half>, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to <2 x half>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x half> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -360,7 +377,8 @@ define <2 x half> @atomicrmw_fmaximumnum_2_x_half(ptr %ptr, <2 x half> %val) {
 
 define <2 x half> @atomicrmw_fminimumnum_2_x_half(ptr %ptr, <2 x half> %val) {
 ; CHECK-LABEL: @atomicrmw_fminimumnum_2_x_half(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x half>, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to <2 x half>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x half> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -381,7 +399,8 @@ define <2 x half> @atomicrmw_fminimumnum_2_x_half(ptr %ptr, <2 x half> %val) {
 
 define float @atomicrmw_fmaximumnum_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fmaximumnum_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -402,7 +421,8 @@ define float @atomicrmw_fmaximumnum_float(ptr %ptr, float %value) {
 
 define float @atomicrmw_fminimumnum_float(ptr %ptr, float %value) {
 ; CHECK-LABEL: @atomicrmw_fminimumnum_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load float, ptr [[PTR:%.*]], align 4
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i32, ptr [[PTR:%.*]] monotonic, align 4
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i32 [[TMP7]] to float
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi float [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -423,7 +443,8 @@ define float @atomicrmw_fminimumnum_float(ptr %ptr, float %value) {
 
 define double @atomicrmw_fmaximumnum_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fmaximumnum_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -444,7 +465,8 @@ define double @atomicrmw_fmaximumnum_double(ptr %ptr, double %value) {
 
 define double @atomicrmw_fminimumnum_double(ptr %ptr, double %value) {
 ; CHECK-LABEL: @atomicrmw_fminimumnum_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load double, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to double
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi double [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -465,7 +487,8 @@ define double @atomicrmw_fminimumnum_double(ptr %ptr, double %value) {
 
 define <2 x float> @atomicrmw_fmaximumnum_2_x_float(ptr %ptr, <2 x float> %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximumnum_2_x_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x float>, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to <2 x float>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x float> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -486,7 +509,8 @@ define <2 x float> @atomicrmw_fmaximumnum_2_x_float(ptr %ptr, <2 x float> %val) 
 
 define <2 x float> @atomicrmw_fminimumnum_2_x_float(ptr %ptr, <2 x float> %val) {
 ; CHECK-LABEL: @atomicrmw_fminimumnum_2_x_float(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x float>, ptr [[PTR:%.*]], align 8
+; CHECK-NEXT:    [[TMP7:%.*]] = load atomic i64, ptr [[PTR:%.*]] monotonic, align 8
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i64 [[TMP7]] to <2 x float>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x float> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -507,7 +531,9 @@ define <2 x float> @atomicrmw_fminimumnum_2_x_float(ptr %ptr, <2 x float> %val) 
 
 define <2 x double> @atomicrmw_fmaximumnum_2_x_double(ptr %ptr, <2 x double> %val) {
 ; CHECK-LABEL: @atomicrmw_fmaximumnum_2_x_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x double>, ptr [[PTR:%.*]], align 16
+; CHECK-NEXT:    [[TMP8:%.*]] = cmpxchg ptr [[PTR:%.*]], i128 0, i128 0 monotonic monotonic, align 16
+; CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { i128, i1 } [[TMP8]], 0
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i128 [[TMP7]] to <2 x double>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x double> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]
@@ -528,7 +554,9 @@ define <2 x double> @atomicrmw_fmaximumnum_2_x_double(ptr %ptr, <2 x double> %va
 
 define <2 x double> @atomicrmw_fminimumnum_2_x_double(ptr %ptr, <2 x double> %val) {
 ; CHECK-LABEL: @atomicrmw_fminimumnum_2_x_double(
-; CHECK-NEXT:    [[TMP1:%.*]] = load <2 x double>, ptr [[PTR:%.*]], align 16
+; CHECK-NEXT:    [[TMP8:%.*]] = cmpxchg ptr [[PTR:%.*]], i128 0, i128 0 monotonic monotonic, align 16
+; CHECK-NEXT:    [[TMP7:%.*]] = extractvalue { i128, i1 } [[TMP8]], 0
+; CHECK-NEXT:    [[TMP1:%.*]] = bitcast i128 [[TMP7]] to <2 x double>
 ; CHECK-NEXT:    br label [[ATOMICRMW_START:%.*]]
 ; CHECK:       atomicrmw.start:
 ; CHECK-NEXT:    [[LOADED:%.*]] = phi <2 x double> [ [[TMP1]], [[TMP0:%.*]] ], [ [[TMP6:%.*]], [[ATOMICRMW_START]] ]

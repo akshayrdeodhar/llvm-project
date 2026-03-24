@@ -13000,7 +13000,7 @@ define float @flat_atomic_fmax_f32_saddr_rtn(ptr inreg %ptr, float %data) {
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-SDAG-NEXT:  .LBB118_1: ; %atomicrmw.start
@@ -13024,7 +13024,7 @@ define float @flat_atomic_fmax_f32_saddr_rtn(ptr inreg %ptr, float %data) {
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
 ; GFX950-GISEL-NEXT:    v_mov_b32_e32 v1, v0
-; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_max_f32_e32 v1, v1, v1
 ; GFX950-GISEL-NEXT:  .LBB118_1: ; %atomicrmw.start
@@ -13062,7 +13062,7 @@ define void @flat_atomic_fmax_f32_saddr_nortn(ptr inreg %ptr, float %data) {
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-SDAG-NEXT:  .LBB119_1: ; %atomicrmw.start
@@ -13085,7 +13085,7 @@ define void @flat_atomic_fmax_f32_saddr_nortn(ptr inreg %ptr, float %data) {
 ; GFX950-GISEL:       ; %bb.0:
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-GISEL-NEXT:  .LBB119_1: ; %atomicrmw.start
@@ -13123,7 +13123,7 @@ define float @flat_atomic_fmin_f32_saddr_rtn(ptr inreg %ptr, float %data) {
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-SDAG-NEXT:  .LBB120_1: ; %atomicrmw.start
@@ -13147,7 +13147,7 @@ define float @flat_atomic_fmin_f32_saddr_rtn(ptr inreg %ptr, float %data) {
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
 ; GFX950-GISEL-NEXT:    v_mov_b32_e32 v1, v0
-; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_max_f32_e32 v1, v1, v1
 ; GFX950-GISEL-NEXT:  .LBB120_1: ; %atomicrmw.start
@@ -13185,7 +13185,7 @@ define void @flat_atomic_fmin_f32_saddr_nortn(ptr inreg %ptr, float %data) {
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-SDAG-NEXT:  .LBB121_1: ; %atomicrmw.start
@@ -13208,7 +13208,7 @@ define void @flat_atomic_fmin_f32_saddr_nortn(ptr inreg %ptr, float %data) {
 ; GFX950-GISEL:       ; %bb.0:
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_max_f32_e32 v4, v0, v0
 ; GFX950-GISEL-NEXT:  .LBB121_1: ; %atomicrmw.start
@@ -13329,7 +13329,7 @@ define <2 x half> @flat_atomic_fmax_v2f16_saddr_rtn(ptr inreg %ptr, <2 x half> %
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-SDAG-NEXT:    .p2align 5, , 4
@@ -13355,7 +13355,7 @@ define <2 x half> @flat_atomic_fmax_v2f16_saddr_rtn(ptr inreg %ptr, <2 x half> %
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
 ; GFX950-GISEL-NEXT:    v_mov_b32_e32 v1, v0
-; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_pk_max_f16 v1, v1, v1
 ; GFX950-GISEL-NEXT:  .LBB124_1: ; %atomicrmw.start
@@ -13412,7 +13412,7 @@ define void @flat_atomic_fmax_v2f16_saddr_nortn(ptr inreg %ptr, <2 x half> %data
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-SDAG-NEXT:    .p2align 5, , 4
@@ -13437,7 +13437,7 @@ define void @flat_atomic_fmax_v2f16_saddr_nortn(ptr inreg %ptr, <2 x half> %data
 ; GFX950-GISEL:       ; %bb.0:
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-GISEL-NEXT:    .p2align 5, , 4
@@ -13496,7 +13496,7 @@ define <2 x half> @flat_atomic_fmin_v2f16_saddr_rtn(ptr inreg %ptr, <2 x half> %
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-SDAG-NEXT:    .p2align 5, , 4
@@ -13522,7 +13522,7 @@ define <2 x half> @flat_atomic_fmin_v2f16_saddr_rtn(ptr inreg %ptr, <2 x half> %
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
 ; GFX950-GISEL-NEXT:    v_mov_b32_e32 v1, v0
-; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v0, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_pk_max_f16 v1, v1, v1
 ; GFX950-GISEL-NEXT:  .LBB126_1: ; %atomicrmw.start
@@ -13579,7 +13579,7 @@ define void @flat_atomic_fmin_v2f16_saddr_nortn(ptr inreg %ptr, <2 x half> %data
 ; GFX950-SDAG:       ; %bb.0:
 ; GFX950-SDAG-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-SDAG-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-SDAG-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-SDAG-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-SDAG-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-SDAG-NEXT:    .p2align 5, , 4
@@ -13604,7 +13604,7 @@ define void @flat_atomic_fmin_v2f16_saddr_nortn(ptr inreg %ptr, <2 x half> %data
 ; GFX950-GISEL:       ; %bb.0:
 ; GFX950-GISEL-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-GISEL-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-GISEL-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-GISEL-NEXT:    s_mov_b64 s[0:1], 0
 ; GFX950-GISEL-NEXT:    v_pk_max_f16 v4, v0, v0
 ; GFX950-GISEL-NEXT:    .p2align 5, , 4
@@ -13709,7 +13709,7 @@ define <2 x bfloat> @flat_atomic_fmax_v2bf16_saddr_rtn(ptr inreg %ptr, <2 x bflo
 ; GFX950:       ; %bb.0:
 ; GFX950-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-NEXT:    v_and_b32_e32 v4, 0xffff0000, v0
 ; GFX950-NEXT:    v_lshlrev_b32_e32 v5, 16, v0
@@ -13767,7 +13767,7 @@ define void @flat_atomic_fmax_v2bf16_saddr_nortn(ptr inreg %ptr, <2 x bfloat> %d
 ; GFX950:       ; %bb.0:
 ; GFX950-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-NEXT:    v_and_b32_e32 v4, 0xffff0000, v0
 ; GFX950-NEXT:    v_lshlrev_b32_e32 v5, 16, v0
@@ -13827,7 +13827,7 @@ define <2 x bfloat> @flat_atomic_fmin_v2bf16_saddr_rtn(ptr inreg %ptr, <2 x bflo
 ; GFX950:       ; %bb.0:
 ; GFX950-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-NEXT:    v_and_b32_e32 v4, 0xffff0000, v0
 ; GFX950-NEXT:    v_lshlrev_b32_e32 v5, 16, v0
@@ -13885,7 +13885,7 @@ define void @flat_atomic_fmin_v2bf16_saddr_nortn(ptr inreg %ptr, <2 x bfloat> %d
 ; GFX950:       ; %bb.0:
 ; GFX950-NEXT:    s_waitcnt vmcnt(0) expcnt(0) lgkmcnt(0)
 ; GFX950-NEXT:    v_mov_b64_e32 v[2:3], s[0:1]
-; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40
+; GFX950-NEXT:    flat_load_dword v1, v[2:3] offset:40 sc0
 ; GFX950-NEXT:    s_mov_b64 s[2:3], 0
 ; GFX950-NEXT:    v_and_b32_e32 v4, 0xffff0000, v0
 ; GFX950-NEXT:    v_lshlrev_b32_e32 v5, 16, v0

@@ -364,6 +364,16 @@ public:
 
   TargetLoweringBase::AtomicExpansionKind
   shouldExpandAtomicLoadInIR(LoadInst *LI) const override;
+
+  TargetLoweringBase::AtomicExpansionKind
+  shouldCastAtomicLoadInIR(LoadInst *LI) const override {
+    if ((LI->getType()->isVectorTy() &&
+         !cast<VectorType>(LI->getType())->getElementType()->isPointerTy()) ||
+        LI->getType()->isFloatingPointTy())
+      return AtomicExpansionKind::CastToInteger;
+    return AtomicExpansionKind::None;
+  }
+
   TargetLoweringBase::AtomicExpansionKind
   shouldExpandAtomicStoreInIR(StoreInst *SI) const override;
   TargetLoweringBase::AtomicExpansionKind

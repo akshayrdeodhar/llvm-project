@@ -244,6 +244,9 @@ public:
 
   // FIXME: This hook should not exist
   AtomicExpansionKind shouldCastAtomicLoadInIR(LoadInst *LI) const override {
+    if ((LI->getType()->isVectorTy() &&
+         !cast<VectorType>(LI->getType())->getElementType()->isPointerTy()))
+      return AtomicExpansionKind::CastToInteger;
     return AtomicExpansionKind::None;
   }
 

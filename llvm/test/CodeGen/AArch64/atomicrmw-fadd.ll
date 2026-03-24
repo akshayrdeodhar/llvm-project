@@ -23,8 +23,9 @@ define half @test_atomicrmw_fadd_f16_seq_cst_align2(ptr %ptr, half %value) #0 {
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_f16_seq_cst_align2:
 ; LSE:       // %bb.0:
+; LSE-NEXT:    ldrh w8, [x0]
 ; LSE-NEXT:    fcvt s1, h0
-; LSE-NEXT:    ldr h0, [x0]
+; LSE-NEXT:    fmov s0, w8
 ; LSE-NEXT:  .LBB0_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    fcvt s2, h0
@@ -44,11 +45,11 @@ define half @test_atomicrmw_fadd_f16_seq_cst_align2(ptr %ptr, half %value) #0 {
 ; SOFTFP-NOLSE-LABEL: test_atomicrmw_fadd_f16_seq_cst_align2:
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    str x30, [sp, #-48]! // 8-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #32] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:    mov w20, w1
-; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #16] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB0_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB0_2 Depth 2
@@ -111,8 +112,9 @@ define half @test_atomicrmw_fadd_f16_seq_cst_align4(ptr %ptr, half %value) #0 {
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_f16_seq_cst_align4:
 ; LSE:       // %bb.0:
+; LSE-NEXT:    ldrh w8, [x0]
 ; LSE-NEXT:    fcvt s1, h0
-; LSE-NEXT:    ldr h0, [x0]
+; LSE-NEXT:    fmov s0, w8
 ; LSE-NEXT:  .LBB1_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    fcvt s2, h0
@@ -132,11 +134,11 @@ define half @test_atomicrmw_fadd_f16_seq_cst_align4(ptr %ptr, half %value) #0 {
 ; SOFTFP-NOLSE-LABEL: test_atomicrmw_fadd_f16_seq_cst_align4:
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    str x30, [sp, #-48]! // 8-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #32] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:    mov w20, w1
-; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #16] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB1_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB1_2 Depth 2
@@ -204,10 +206,11 @@ define bfloat @test_atomicrmw_fadd_bf16_seq_cst_align2(ptr %ptr, bfloat %value) 
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_bf16_seq_cst_align2:
 ; LSE:       // %bb.0:
+; LSE-NEXT:    ldrh w9, [x0]
 ; LSE-NEXT:    // kill: def $h0 killed $h0 def $d0
 ; LSE-NEXT:    shll v1.4s, v0.4h, #16
 ; LSE-NEXT:    mov w8, #32767 // =0x7fff
-; LSE-NEXT:    ldr h0, [x0]
+; LSE-NEXT:    fmov s0, w9
 ; LSE-NEXT:  .LBB2_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    shll v2.4s, v0.4h, #16
@@ -234,8 +237,8 @@ define bfloat @test_atomicrmw_fadd_bf16_seq_cst_align2(ptr %ptr, bfloat %value) 
 ; SOFTFP-NOLSE-NEXT:    stp x30, x21, [sp, #-32]! // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:    lsl w20, w1, #16
+; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB2_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB2_2 Depth 2
@@ -298,10 +301,11 @@ define bfloat @test_atomicrmw_fadd_bf16_seq_cst_align4(ptr %ptr, bfloat %value) 
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_bf16_seq_cst_align4:
 ; LSE:       // %bb.0:
+; LSE-NEXT:    ldrh w9, [x0]
 ; LSE-NEXT:    // kill: def $h0 killed $h0 def $d0
 ; LSE-NEXT:    shll v1.4s, v0.4h, #16
 ; LSE-NEXT:    mov w8, #32767 // =0x7fff
-; LSE-NEXT:    ldr h0, [x0]
+; LSE-NEXT:    fmov s0, w9
 ; LSE-NEXT:  .LBB3_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    shll v2.4s, v0.4h, #16
@@ -328,8 +332,8 @@ define bfloat @test_atomicrmw_fadd_bf16_seq_cst_align4(ptr %ptr, bfloat %value) 
 ; SOFTFP-NOLSE-NEXT:    stp x30, x21, [sp, #-32]! // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:    lsl w20, w1, #16
+; SOFTFP-NOLSE-NEXT:    ldrh w0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB3_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB3_2 Depth 2
@@ -404,8 +408,8 @@ define float @test_atomicrmw_fadd_f32_seq_cst_align4(ptr %ptr, float %value) #0 
 ; SOFTFP-NOLSE-NEXT:    stp x30, x21, [sp, #-32]! // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldr w0, [x0]
 ; SOFTFP-NOLSE-NEXT:    mov w20, w1
+; SOFTFP-NOLSE-NEXT:    ldr w0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB4_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB4_2 Depth 2
@@ -478,8 +482,8 @@ define double @test_atomicrmw_fadd_f32_seq_cst_align8(ptr %ptr, double %value) #
 ; SOFTFP-NOLSE-NEXT:    stp x30, x21, [sp, #-32]! // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    ldr x0, [x0]
 ; SOFTFP-NOLSE-NEXT:    mov x20, x1
+; SOFTFP-NOLSE-NEXT:    ldr x0, [x0]
 ; SOFTFP-NOLSE-NEXT:  .LBB5_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB5_2 Depth 2
@@ -517,63 +521,73 @@ define double @test_atomicrmw_fadd_f32_seq_cst_align8(ptr %ptr, double %value) #
 define fp128 @test_atomicrmw_fadd_fp128_seq_cst_align16(ptr %ptr, fp128 %value) #0 {
 ; NOLSE-LABEL: test_atomicrmw_fadd_fp128_seq_cst_align16:
 ; NOLSE:       // %bb.0:
-; NOLSE-NEXT:    sub sp, sp, #96
-; NOLSE-NEXT:    ldr q1, [x0]
-; NOLSE-NEXT:    stp x30, x19, [sp, #80] // 16-byte Folded Spill
+; NOLSE-NEXT:    sub sp, sp, #112
+; NOLSE-NEXT:    mov v1.16b, v0.16b
+; NOLSE-NEXT:    stp x30, x19, [sp, #96] // 16-byte Folded Spill
 ; NOLSE-NEXT:    mov x19, x0
-; NOLSE-NEXT:    str q0, [sp] // 16-byte Spill
-; NOLSE-NEXT:    b .LBB6_2
-; NOLSE-NEXT:  .LBB6_1: // %atomicrmw.start
-; NOLSE-NEXT:    // in Loop: Header=BB6_2 Depth=1
+; NOLSE-NEXT:  .LBB6_1: // %atomicrmw.start2
+; NOLSE-NEXT:    // =>This Inner Loop Header: Depth=1
+; NOLSE-NEXT:    ldxp x9, x8, [x19]
+; NOLSE-NEXT:    stxp w10, x9, x8, [x19]
+; NOLSE-NEXT:    cbnz w10, .LBB6_1
+; NOLSE-NEXT:  // %bb.2: // %atomicrmw.end1
+; NOLSE-NEXT:    stp x9, x8, [sp, #80]
+; NOLSE-NEXT:    ldr q0, [sp, #80]
+; NOLSE-NEXT:    str q1, [sp] // 16-byte Spill
+; NOLSE-NEXT:    b .LBB6_4
+; NOLSE-NEXT:  .LBB6_3: // %atomicrmw.start
+; NOLSE-NEXT:    // in Loop: Header=BB6_4 Depth=1
 ; NOLSE-NEXT:    stp x12, x13, [sp, #32]
 ; NOLSE-NEXT:    cmp x13, x10
-; NOLSE-NEXT:    ldr q1, [sp, #32]
+; NOLSE-NEXT:    ldr q0, [sp, #32]
 ; NOLSE-NEXT:    ccmp x12, x11, #0, eq
-; NOLSE-NEXT:    b.eq .LBB6_6
-; NOLSE-NEXT:  .LBB6_2: // %atomicrmw.start
+; NOLSE-NEXT:    b.eq .LBB6_8
+; NOLSE-NEXT:  .LBB6_4: // %atomicrmw.start
 ; NOLSE-NEXT:    // =>This Loop Header: Depth=1
-; NOLSE-NEXT:    // Child Loop BB6_3 Depth 2
-; NOLSE-NEXT:    mov v0.16b, v1.16b
-; NOLSE-NEXT:    str q1, [sp, #16] // 16-byte Spill
+; NOLSE-NEXT:    // Child Loop BB6_5 Depth 2
 ; NOLSE-NEXT:    ldr q1, [sp] // 16-byte Reload
+; NOLSE-NEXT:    str q0, [sp, #16] // 16-byte Spill
 ; NOLSE-NEXT:    bl __addtf3
 ; NOLSE-NEXT:    str q0, [sp, #48]
 ; NOLSE-NEXT:    ldr q0, [sp, #16] // 16-byte Reload
 ; NOLSE-NEXT:    ldp x9, x8, [sp, #48]
 ; NOLSE-NEXT:    str q0, [sp, #64]
 ; NOLSE-NEXT:    ldp x11, x10, [sp, #64]
-; NOLSE-NEXT:  .LBB6_3: // %atomicrmw.start
-; NOLSE-NEXT:    // Parent Loop BB6_2 Depth=1
+; NOLSE-NEXT:  .LBB6_5: // %atomicrmw.start
+; NOLSE-NEXT:    // Parent Loop BB6_4 Depth=1
 ; NOLSE-NEXT:    // => This Inner Loop Header: Depth=2
 ; NOLSE-NEXT:    ldaxp x12, x13, [x19]
 ; NOLSE-NEXT:    cmp x12, x11
 ; NOLSE-NEXT:    cset w14, ne
 ; NOLSE-NEXT:    cmp x13, x10
 ; NOLSE-NEXT:    cinc w14, w14, ne
-; NOLSE-NEXT:    cbz w14, .LBB6_5
-; NOLSE-NEXT:  // %bb.4: // %atomicrmw.start
-; NOLSE-NEXT:    // in Loop: Header=BB6_3 Depth=2
+; NOLSE-NEXT:    cbz w14, .LBB6_7
+; NOLSE-NEXT:  // %bb.6: // %atomicrmw.start
+; NOLSE-NEXT:    // in Loop: Header=BB6_5 Depth=2
 ; NOLSE-NEXT:    stlxp w14, x12, x13, [x19]
-; NOLSE-NEXT:    cbnz w14, .LBB6_3
-; NOLSE-NEXT:    b .LBB6_1
-; NOLSE-NEXT:  .LBB6_5: // %atomicrmw.start
-; NOLSE-NEXT:    // in Loop: Header=BB6_3 Depth=2
+; NOLSE-NEXT:    cbnz w14, .LBB6_5
+; NOLSE-NEXT:    b .LBB6_3
+; NOLSE-NEXT:  .LBB6_7: // %atomicrmw.start
+; NOLSE-NEXT:    // in Loop: Header=BB6_5 Depth=2
 ; NOLSE-NEXT:    stlxp w14, x9, x8, [x19]
-; NOLSE-NEXT:    cbnz w14, .LBB6_3
-; NOLSE-NEXT:    b .LBB6_1
-; NOLSE-NEXT:  .LBB6_6: // %atomicrmw.end
-; NOLSE-NEXT:    ldp x30, x19, [sp, #80] // 16-byte Folded Reload
-; NOLSE-NEXT:    mov v0.16b, v1.16b
-; NOLSE-NEXT:    add sp, sp, #96
+; NOLSE-NEXT:    cbnz w14, .LBB6_5
+; NOLSE-NEXT:    b .LBB6_3
+; NOLSE-NEXT:  .LBB6_8: // %atomicrmw.end
+; NOLSE-NEXT:    ldp x30, x19, [sp, #96] // 16-byte Folded Reload
+; NOLSE-NEXT:    add sp, sp, #112
 ; NOLSE-NEXT:    ret
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_fp128_seq_cst_align16:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    sub sp, sp, #96
-; LSE-NEXT:    ldr q1, [x0]
-; LSE-NEXT:    stp x30, x19, [sp, #80] // 16-byte Folded Spill
+; LSE-NEXT:    sub sp, sp, #112
+; LSE-NEXT:    stp x30, x19, [sp, #96] // 16-byte Folded Spill
 ; LSE-NEXT:    mov x19, x0
+; LSE-NEXT:    mov x0, xzr
+; LSE-NEXT:    mov x1, xzr
+; LSE-NEXT:    casp x0, x1, x0, x1, [x19]
 ; LSE-NEXT:    str q0, [sp] // 16-byte Spill
+; LSE-NEXT:    stp x0, x1, [sp, #80]
+; LSE-NEXT:    ldr q1, [sp, #80]
 ; LSE-NEXT:  .LBB6_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov v0.16b, v1.16b
@@ -594,56 +608,60 @@ define fp128 @test_atomicrmw_fadd_fp128_seq_cst_align16(ptr %ptr, fp128 %value) 
 ; LSE-NEXT:    ccmp x4, x2, #0, eq
 ; LSE-NEXT:    b.ne .LBB6_1
 ; LSE-NEXT:  // %bb.2: // %atomicrmw.end
-; LSE-NEXT:    ldp x30, x19, [sp, #80] // 16-byte Folded Reload
+; LSE-NEXT:    ldp x30, x19, [sp, #96] // 16-byte Folded Reload
 ; LSE-NEXT:    mov v0.16b, v1.16b
-; LSE-NEXT:    add sp, sp, #96
+; LSE-NEXT:    add sp, sp, #112
 ; LSE-NEXT:    ret
 ;
 ; SOFTFP-NOLSE-LABEL: test_atomicrmw_fadd_fp128_seq_cst_align16:
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    stp x30, x23, [sp, #-48]! // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #32] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    mov x20, x0
-; SOFTFP-NOLSE-NEXT:    mov x19, x3
-; SOFTFP-NOLSE-NEXT:    ldp x0, x1, [x0]
 ; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #16] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    mov x21, x2
-; SOFTFP-NOLSE-NEXT:    b .LBB6_2
-; SOFTFP-NOLSE-NEXT:  .LBB6_1: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_2 Depth=1
+; SOFTFP-NOLSE-NEXT:    mov x21, x0
+; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #32] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    mov x19, x3
+; SOFTFP-NOLSE-NEXT:    mov x20, x2
+; SOFTFP-NOLSE-NEXT:  .LBB6_1: // %atomicrmw.start2
+; SOFTFP-NOLSE-NEXT:    // =>This Inner Loop Header: Depth=1
+; SOFTFP-NOLSE-NEXT:    ldxp x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    stxp w8, x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w8, .LBB6_1
+; SOFTFP-NOLSE-NEXT:    b .LBB6_3
+; SOFTFP-NOLSE-NEXT:  .LBB6_2: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_3 Depth=1
 ; SOFTFP-NOLSE-NEXT:    cmp x1, x22
 ; SOFTFP-NOLSE-NEXT:    ccmp x0, x23, #0, eq
-; SOFTFP-NOLSE-NEXT:    b.eq .LBB6_6
-; SOFTFP-NOLSE-NEXT:  .LBB6_2: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    b.eq .LBB6_7
+; SOFTFP-NOLSE-NEXT:  .LBB6_3: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
-; SOFTFP-NOLSE-NEXT:    // Child Loop BB6_3 Depth 2
-; SOFTFP-NOLSE-NEXT:    mov x2, x21
+; SOFTFP-NOLSE-NEXT:    // Child Loop BB6_4 Depth 2
+; SOFTFP-NOLSE-NEXT:    mov x2, x20
 ; SOFTFP-NOLSE-NEXT:    mov x3, x19
 ; SOFTFP-NOLSE-NEXT:    mov x22, x1
 ; SOFTFP-NOLSE-NEXT:    mov x23, x0
 ; SOFTFP-NOLSE-NEXT:    bl __addtf3
 ; SOFTFP-NOLSE-NEXT:    mov x8, x0
 ; SOFTFP-NOLSE-NEXT:    mov x9, x1
-; SOFTFP-NOLSE-NEXT:  .LBB6_3: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // Parent Loop BB6_2 Depth=1
+; SOFTFP-NOLSE-NEXT:  .LBB6_4: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // Parent Loop BB6_3 Depth=1
 ; SOFTFP-NOLSE-NEXT:    // => This Inner Loop Header: Depth=2
-; SOFTFP-NOLSE-NEXT:    ldaxp x0, x1, [x20]
+; SOFTFP-NOLSE-NEXT:    ldaxp x0, x1, [x21]
 ; SOFTFP-NOLSE-NEXT:    cmp x0, x23
 ; SOFTFP-NOLSE-NEXT:    cset w10, ne
 ; SOFTFP-NOLSE-NEXT:    cmp x1, x22
 ; SOFTFP-NOLSE-NEXT:    cinc w10, w10, ne
-; SOFTFP-NOLSE-NEXT:    cbz w10, .LBB6_5
-; SOFTFP-NOLSE-NEXT:  // %bb.4: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_3 Depth=2
-; SOFTFP-NOLSE-NEXT:    stlxp w10, x0, x1, [x20]
-; SOFTFP-NOLSE-NEXT:    cbnz w10, .LBB6_3
-; SOFTFP-NOLSE-NEXT:    b .LBB6_1
-; SOFTFP-NOLSE-NEXT:  .LBB6_5: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_3 Depth=2
-; SOFTFP-NOLSE-NEXT:    stlxp w10, x8, x9, [x20]
-; SOFTFP-NOLSE-NEXT:    cbnz w10, .LBB6_3
-; SOFTFP-NOLSE-NEXT:    b .LBB6_1
-; SOFTFP-NOLSE-NEXT:  .LBB6_6: // %atomicrmw.end
+; SOFTFP-NOLSE-NEXT:    cbz w10, .LBB6_6
+; SOFTFP-NOLSE-NEXT:  // %bb.5: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_4 Depth=2
+; SOFTFP-NOLSE-NEXT:    stlxp w10, x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w10, .LBB6_4
+; SOFTFP-NOLSE-NEXT:    b .LBB6_2
+; SOFTFP-NOLSE-NEXT:  .LBB6_6: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB6_4 Depth=2
+; SOFTFP-NOLSE-NEXT:    stlxp w10, x8, x9, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w10, .LBB6_4
+; SOFTFP-NOLSE-NEXT:    b .LBB6_2
+; SOFTFP-NOLSE-NEXT:  .LBB6_7: // %atomicrmw.end
 ; SOFTFP-NOLSE-NEXT:    ldp x20, x19, [sp, #32] // 16-byte Folded Reload
 ; SOFTFP-NOLSE-NEXT:    ldp x22, x21, [sp, #16] // 16-byte Folded Reload
 ; SOFTFP-NOLSE-NEXT:    ldp x30, x23, [sp], #48 // 16-byte Folded Reload
@@ -694,13 +712,13 @@ define <2 x half> @test_atomicrmw_fadd_v2f16_seq_cst_align4(ptr %ptr, <2 x half>
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    stp x30, x25, [sp, #-64]! // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x24, x23, [sp, #16] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    ldrh w23, [x0, #2]
 ; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #32] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    ldrh w22, [x0]
 ; SOFTFP-NOLSE-NEXT:    mov w21, w1
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov w19, w2
 ; SOFTFP-NOLSE-NEXT:    mov x20, x0
+; SOFTFP-NOLSE-NEXT:    ldr w22, [x0]
+; SOFTFP-NOLSE-NEXT:    lsr w23, w22, #16
 ; SOFTFP-NOLSE-NEXT:  .LBB7_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB7_2 Depth 2
@@ -808,15 +826,15 @@ define <2 x bfloat> @test_atomicrmw_fadd_v2bf16_seq_cst_align4(ptr %ptr, <2 x bf
 ; SOFTFP-NOLSE-LABEL: test_atomicrmw_fadd_v2bf16_seq_cst_align4:
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    str x30, [sp, #-64]! // 8-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    stp x24, x23, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov w8, w1
 ; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #32] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    ldrh w1, [x0, #2]
-; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    ldrh w22, [x0]
-; SOFTFP-NOLSE-NEXT:    lsl w20, w2, #16
 ; SOFTFP-NOLSE-NEXT:    lsl w21, w8, #16
+; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    lsl w20, w2, #16
 ; SOFTFP-NOLSE-NEXT:    mov x19, x0
-; SOFTFP-NOLSE-NEXT:    stp x24, x23, [sp, #16] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    ldr w22, [x0]
+; SOFTFP-NOLSE-NEXT:    lsr w1, w22, #16
 ; SOFTFP-NOLSE-NEXT:  .LBB8_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB8_2 Depth 2
@@ -881,7 +899,8 @@ define <2 x float> @test_atomicrmw_fadd_v2f32_seq_cst_align8(ptr %ptr, <2 x floa
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_v2f32_seq_cst_align8:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldr d1, [x0]
+; LSE-NEXT:    ldr x8, [x0]
+; LSE-NEXT:    fmov d1, x8
 ; LSE-NEXT:  .LBB9_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    fadd v2.2s, v1.2s, v0.2s
@@ -901,11 +920,14 @@ define <2 x float> @test_atomicrmw_fadd_v2f32_seq_cst_align8(ptr %ptr, <2 x floa
 ; SOFTFP-NOLSE-NEXT:    str x30, [sp, #-64]! // 8-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x24, x23, [sp, #16] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #32] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    mov w21, w1
-; SOFTFP-NOLSE-NEXT:    ldp w22, w23, [x0]
+; SOFTFP-NOLSE-NEXT:    mov x21, x0
 ; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
 ; SOFTFP-NOLSE-NEXT:    mov w19, w2
-; SOFTFP-NOLSE-NEXT:    mov x20, x0
+; SOFTFP-NOLSE-NEXT:    mov w20, w1
+; SOFTFP-NOLSE-NEXT:    ldr x22, [x0]
+; SOFTFP-NOLSE-NEXT:    lsr x23, x22, #32
+; SOFTFP-NOLSE-NEXT:    // kill: def $w22 killed $w22 killed $x22 def $x22
+; SOFTFP-NOLSE-NEXT:    // kill: def $w23 killed $w23 killed $x23 def $x23
 ; SOFTFP-NOLSE-NEXT:  .LBB9_1: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
 ; SOFTFP-NOLSE-NEXT:    // Child Loop BB9_2 Depth 2
@@ -914,7 +936,7 @@ define <2 x float> @test_atomicrmw_fadd_v2f32_seq_cst_align8(ptr %ptr, <2 x floa
 ; SOFTFP-NOLSE-NEXT:    bl __addsf3
 ; SOFTFP-NOLSE-NEXT:    mov w24, w0
 ; SOFTFP-NOLSE-NEXT:    mov w0, w22
-; SOFTFP-NOLSE-NEXT:    mov w1, w21
+; SOFTFP-NOLSE-NEXT:    mov w1, w20
 ; SOFTFP-NOLSE-NEXT:    bl __addsf3
 ; SOFTFP-NOLSE-NEXT:    mov w8, w0
 ; SOFTFP-NOLSE-NEXT:    mov w9, w22
@@ -924,12 +946,12 @@ define <2 x float> @test_atomicrmw_fadd_v2f32_seq_cst_align8(ptr %ptr, <2 x floa
 ; SOFTFP-NOLSE-NEXT:  .LBB9_2: // %cmpxchg.start
 ; SOFTFP-NOLSE-NEXT:    // Parent Loop BB9_1 Depth=1
 ; SOFTFP-NOLSE-NEXT:    // => This Inner Loop Header: Depth=2
-; SOFTFP-NOLSE-NEXT:    ldaxr x22, [x20]
+; SOFTFP-NOLSE-NEXT:    ldaxr x22, [x21]
 ; SOFTFP-NOLSE-NEXT:    cmp x22, x9
 ; SOFTFP-NOLSE-NEXT:    b.ne .LBB9_5
 ; SOFTFP-NOLSE-NEXT:  // %bb.3: // %cmpxchg.trystore
 ; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB9_2 Depth=2
-; SOFTFP-NOLSE-NEXT:    stlxr w10, x8, [x20]
+; SOFTFP-NOLSE-NEXT:    stlxr w10, x8, [x21]
 ; SOFTFP-NOLSE-NEXT:    cbnz w10, .LBB9_2
 ; SOFTFP-NOLSE-NEXT:  // %bb.4: // in Loop: Header=BB9_1 Depth=1
 ; SOFTFP-NOLSE-NEXT:    mov w8, #1 // =0x1
@@ -973,7 +995,11 @@ define <2 x double> @test_atomicrmw_fadd_v2f64_seq_cst_align8(ptr %ptr, <2 x dou
 ;
 ; LSE-LABEL: test_atomicrmw_fadd_v2f64_seq_cst_align8:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldr q1, [x0]
+; LSE-NEXT:    mov x2, xzr
+; LSE-NEXT:    mov x3, xzr
+; LSE-NEXT:    casp x2, x3, x2, x3, [x0]
+; LSE-NEXT:    fmov d1, x2
+; LSE-NEXT:    mov v1.d[1], x3
 ; LSE-NEXT:  .LBB10_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    fadd v2.2d, v1.2d, v0.2d
@@ -996,22 +1022,26 @@ define <2 x double> @test_atomicrmw_fadd_v2f64_seq_cst_align8(ptr %ptr, <2 x dou
 ; SOFTFP-NOLSE-LABEL: test_atomicrmw_fadd_v2f64_seq_cst_align8:
 ; SOFTFP-NOLSE:       // %bb.0:
 ; SOFTFP-NOLSE-NEXT:    str x30, [sp, #-64]! // 8-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    mov x20, x0
-; SOFTFP-NOLSE-NEXT:    mov x19, x3
-; SOFTFP-NOLSE-NEXT:    ldp x0, x1, [x0]
 ; SOFTFP-NOLSE-NEXT:    stp x22, x21, [sp, #32] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    mov x21, x2
+; SOFTFP-NOLSE-NEXT:    mov x21, x0
+; SOFTFP-NOLSE-NEXT:    stp x20, x19, [sp, #48] // 16-byte Folded Spill
+; SOFTFP-NOLSE-NEXT:    mov x19, x3
+; SOFTFP-NOLSE-NEXT:    mov x20, x2
 ; SOFTFP-NOLSE-NEXT:    stp x24, x23, [sp, #16] // 16-byte Folded Spill
-; SOFTFP-NOLSE-NEXT:    b .LBB10_2
-; SOFTFP-NOLSE-NEXT:  .LBB10_1: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_2 Depth=1
+; SOFTFP-NOLSE-NEXT:  .LBB10_1: // %atomicrmw.start2
+; SOFTFP-NOLSE-NEXT:    // =>This Inner Loop Header: Depth=1
+; SOFTFP-NOLSE-NEXT:    ldxp x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    stxp w8, x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w8, .LBB10_1
+; SOFTFP-NOLSE-NEXT:    b .LBB10_3
+; SOFTFP-NOLSE-NEXT:  .LBB10_2: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_3 Depth=1
 ; SOFTFP-NOLSE-NEXT:    cmp x1, x22
 ; SOFTFP-NOLSE-NEXT:    ccmp x0, x23, #0, eq
-; SOFTFP-NOLSE-NEXT:    b.eq .LBB10_6
-; SOFTFP-NOLSE-NEXT:  .LBB10_2: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    b.eq .LBB10_7
+; SOFTFP-NOLSE-NEXT:  .LBB10_3: // %atomicrmw.start
 ; SOFTFP-NOLSE-NEXT:    // =>This Loop Header: Depth=1
-; SOFTFP-NOLSE-NEXT:    // Child Loop BB10_3 Depth 2
+; SOFTFP-NOLSE-NEXT:    // Child Loop BB10_4 Depth 2
 ; SOFTFP-NOLSE-NEXT:    mov x22, x1
 ; SOFTFP-NOLSE-NEXT:    mov x23, x0
 ; SOFTFP-NOLSE-NEXT:    mov x0, x1
@@ -1019,29 +1049,29 @@ define <2 x double> @test_atomicrmw_fadd_v2f64_seq_cst_align8(ptr %ptr, <2 x dou
 ; SOFTFP-NOLSE-NEXT:    bl __adddf3
 ; SOFTFP-NOLSE-NEXT:    mov x24, x0
 ; SOFTFP-NOLSE-NEXT:    mov x0, x23
-; SOFTFP-NOLSE-NEXT:    mov x1, x21
+; SOFTFP-NOLSE-NEXT:    mov x1, x20
 ; SOFTFP-NOLSE-NEXT:    bl __adddf3
 ; SOFTFP-NOLSE-NEXT:    mov x8, x0
-; SOFTFP-NOLSE-NEXT:  .LBB10_3: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // Parent Loop BB10_2 Depth=1
+; SOFTFP-NOLSE-NEXT:  .LBB10_4: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // Parent Loop BB10_3 Depth=1
 ; SOFTFP-NOLSE-NEXT:    // => This Inner Loop Header: Depth=2
-; SOFTFP-NOLSE-NEXT:    ldaxp x0, x1, [x20]
+; SOFTFP-NOLSE-NEXT:    ldaxp x0, x1, [x21]
 ; SOFTFP-NOLSE-NEXT:    cmp x0, x23
 ; SOFTFP-NOLSE-NEXT:    cset w9, ne
 ; SOFTFP-NOLSE-NEXT:    cmp x1, x22
 ; SOFTFP-NOLSE-NEXT:    cinc w9, w9, ne
-; SOFTFP-NOLSE-NEXT:    cbz w9, .LBB10_5
-; SOFTFP-NOLSE-NEXT:  // %bb.4: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_3 Depth=2
-; SOFTFP-NOLSE-NEXT:    stlxp w9, x0, x1, [x20]
-; SOFTFP-NOLSE-NEXT:    cbnz w9, .LBB10_3
-; SOFTFP-NOLSE-NEXT:    b .LBB10_1
-; SOFTFP-NOLSE-NEXT:  .LBB10_5: // %atomicrmw.start
-; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_3 Depth=2
-; SOFTFP-NOLSE-NEXT:    stlxp w9, x8, x24, [x20]
-; SOFTFP-NOLSE-NEXT:    cbnz w9, .LBB10_3
-; SOFTFP-NOLSE-NEXT:    b .LBB10_1
-; SOFTFP-NOLSE-NEXT:  .LBB10_6: // %atomicrmw.end
+; SOFTFP-NOLSE-NEXT:    cbz w9, .LBB10_6
+; SOFTFP-NOLSE-NEXT:  // %bb.5: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_4 Depth=2
+; SOFTFP-NOLSE-NEXT:    stlxp w9, x0, x1, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w9, .LBB10_4
+; SOFTFP-NOLSE-NEXT:    b .LBB10_2
+; SOFTFP-NOLSE-NEXT:  .LBB10_6: // %atomicrmw.start
+; SOFTFP-NOLSE-NEXT:    // in Loop: Header=BB10_4 Depth=2
+; SOFTFP-NOLSE-NEXT:    stlxp w9, x8, x24, [x21]
+; SOFTFP-NOLSE-NEXT:    cbnz w9, .LBB10_4
+; SOFTFP-NOLSE-NEXT:    b .LBB10_2
+; SOFTFP-NOLSE-NEXT:  .LBB10_7: // %atomicrmw.end
 ; SOFTFP-NOLSE-NEXT:    ldp x20, x19, [sp, #48] // 16-byte Folded Reload
 ; SOFTFP-NOLSE-NEXT:    ldp x22, x21, [sp, #32] // 16-byte Folded Reload
 ; SOFTFP-NOLSE-NEXT:    ldp x24, x23, [sp, #16] // 16-byte Folded Reload

@@ -246,7 +246,9 @@ define void @fetch_and_nand(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_nand:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB4_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -305,7 +307,9 @@ define void @fetch_and_or(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_or:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB5_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -362,7 +366,9 @@ define void @fetch_and_add(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_add:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB6_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -418,7 +424,9 @@ define void @fetch_and_sub(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_sub:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB7_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -478,7 +486,9 @@ define void @fetch_and_min(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_min:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB8_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -540,7 +550,9 @@ define void @fetch_and_max(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_max:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB9_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -602,7 +614,9 @@ define void @fetch_and_umin(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_umin:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB10_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -664,7 +678,9 @@ define void @fetch_and_umax(ptr %p, i128 %bits) {
 ;
 ; LSE-LABEL: fetch_and_umax:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    ldp x4, x5, [x0]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x0]
 ; LSE-NEXT:  .LBB11_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
 ; LSE-NEXT:    mov x7, x5
@@ -714,8 +730,8 @@ define i128 @atomic_load_seq_cst(ptr %p) {
 ;
 ; LSE-LABEL: atomic_load_seq_cst:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    mov x2, #0
-; LSE-NEXT:    mov x3, #0
+; LSE-NEXT:    mov x2, #0 // =0x0
+; LSE-NEXT:    mov x3, #0 // =0x0
 ; LSE-NEXT:    caspal x2, x3, x2, x3, [x0]
 ; LSE-NEXT:    mov x0, x2
 ; LSE-NEXT:    mov x1, x3
@@ -747,8 +763,8 @@ define i128 @atomic_load_relaxed(i64, i64, ptr %p) {
 ;
 ; LSE-LABEL: atomic_load_relaxed:
 ; LSE:       // %bb.0:
-; LSE-NEXT:    mov x0, #0
-; LSE-NEXT:    mov x1, #0
+; LSE-NEXT:    mov x0, #0 // =0x0
+; LSE-NEXT:    mov x1, #0 // =0x0
 ; LSE-NEXT:    casp x0, x1, x0, x1, [x2]
 ; LSE-NEXT:    ret
     %r = load atomic i128, ptr %p monotonic, align 16
@@ -780,7 +796,9 @@ define void @atomic_store_seq_cst(i128 %in, ptr %p) {
 ; LSE-LABEL: atomic_store_seq_cst:
 ; LSE:       // %bb.0:
 ; LSE-NEXT:    // kill: def $x1 killed $x1 killed $x0_x1 def $x0_x1
-; LSE-NEXT:    ldp x4, x5, [x2]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x2]
 ; LSE-NEXT:    // kill: def $x0 killed $x0 killed $x0_x1 def $x0_x1
 ; LSE-NEXT:  .LBB14_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
@@ -822,7 +840,9 @@ define void @atomic_store_release(i128 %in, ptr %p) {
 ; LSE-LABEL: atomic_store_release:
 ; LSE:       // %bb.0:
 ; LSE-NEXT:    // kill: def $x1 killed $x1 killed $x0_x1 def $x0_x1
-; LSE-NEXT:    ldp x4, x5, [x2]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x2]
 ; LSE-NEXT:    // kill: def $x0 killed $x0 killed $x0_x1 def $x0_x1
 ; LSE-NEXT:  .LBB15_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1
@@ -864,7 +884,9 @@ define void @atomic_store_relaxed(i128 %in, ptr %p) {
 ; LSE-LABEL: atomic_store_relaxed:
 ; LSE:       // %bb.0:
 ; LSE-NEXT:    // kill: def $x1 killed $x1 killed $x0_x1 def $x0_x1
-; LSE-NEXT:    ldp x4, x5, [x2]
+; LSE-NEXT:    mov x4, #0 // =0x0
+; LSE-NEXT:    mov x5, #0 // =0x0
+; LSE-NEXT:    casp x4, x5, x4, x5, [x2]
 ; LSE-NEXT:    // kill: def $x0 killed $x0 killed $x0_x1 def $x0_x1
 ; LSE-NEXT:  .LBB16_1: // %atomicrmw.start
 ; LSE-NEXT:    // =>This Inner Loop Header: Depth=1

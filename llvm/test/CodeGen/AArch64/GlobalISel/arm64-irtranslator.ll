@@ -2165,7 +2165,7 @@ define i32 @test_atomicrmw_nand(ptr %addr) {
 ; CHECK:         [[ADDR:%[0-9]+]]:_(p0) = COPY $x0
 ; CHECK-NEXT:    [[VAL:%[0-9]+]]:_(s32) = G_CONSTANT i32 1
 ; CHECK-NEXT:    [[NEG1:%[0-9]+]]:_(s32) = G_CONSTANT i32 -1
-; CHECK-NEXT:    [[OLDVALSTART:%[0-9]+]]:_(s32) = G_LOAD [[ADDR]](p0) :: (load (s32) from %ir.addr)
+; CHECK-NEXT:    [[OLDVALSTART:%[0-9]+]]:_(s32) = G_LOAD [[ADDR]](p0) :: (load monotonic (s32) from %ir.addr)
 ; CHECK:       bb.2.atomicrmw.start:
 ; CHECK-NEXT:    successors: %bb.3({{[^)]+}}), %bb.2({{[^)]+}})
 ; CHECK:         [[OLDVAL:%[0-9]+]]:_(s32) = G_PHI [[OLDVALSTART]](s32), %bb.1, [[OLDVALRES:%[0-9]+]](s32), %bb.2
